@@ -23,6 +23,9 @@ router.get('/test-route-2', (req, res) => {
   logger.debug('test route');
   res.send(200);
 });
+router.get('/debugging-route', (req, res) => {
+  res.send(200);
+});
 
 // export the router for use by the app
 export default router;
