@@ -12,7 +12,7 @@ ENV GIT_SHA=$GIT_SHA
 # --------------------------------------------
 
 # Stage 2/3 - Builder
-FROM node:18-alpine AS pins-web-builder
+FROM node:22-alpine AS pins-web-builder
 ARG GIT_SHA
 
 WORKDIR /usr/src/app
@@ -35,7 +35,7 @@ RUN npm run build
 # --------------------------------
 
 # Stage 3/3 - App run
-FROM node:18-alpine
+FROM node:22-alpine
 ARG GIT_SHA
 
 WORKDIR /usr/src/app
