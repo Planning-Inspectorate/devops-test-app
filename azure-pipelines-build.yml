@@ -35,11 +35,11 @@ extends:
         steps:
           - template: ../steps/node_script.yml
             parameters:
-              nodeVersion: 20
+              nodeVersion: 22
               script: npm ci
           - template: ../steps/node_script.yml
             parameters:
-              nodeVersion: 20
+              nodeVersion: 22
               script: npm run test
       - name: Build App
         dependsOn:
