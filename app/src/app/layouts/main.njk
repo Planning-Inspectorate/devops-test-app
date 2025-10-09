@@ -10,13 +10,13 @@
 {% endblock %}
 
 {% block pageTitle %}
-	{{ pageTitle | default('GOV.UK') }} – {{ serviceName | default('Template App for Testing') }}
+	{{ pageTitle | default('GOV.UK') }} – {{ serviceName | default('DevOps test app') }}
 {% endblock %}
 
 {% block header %}
 	{{ govukHeader({
 		homepageUrl: "/",
-		serviceName: 'Template App for Testing',
+		serviceName: 'DevOps test app',
 		classes: 'pins-modded-header'
 	}) }}
 {% endblock %}
