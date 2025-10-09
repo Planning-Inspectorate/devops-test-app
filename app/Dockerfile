@@ -1,52 +1,36 @@
-# Stage 1/3 - Insatll
-FROM alpine:3.4
-ARG GIT_SHA
-USER root
-RUN apk update
-# TODO: Remove this once these get fixed:
-# - https://github.com/vercel/turborepo/issues/1097
-# - https://github.com/vercel/turborepo/issues/1103
-RUN apk add git
-ENV GIT_SHA=$GIT_SHA
+# Stage 1/2 - Builder
+FROM node:22-alpine AS base
 
-# --------------------------------------------
+#RUN apk update
 
-# Stage 2/3 - Builder
-FROM node:22-alpine AS pins-web-builder
 ARG GIT_SHA
 
 WORKDIR /usr/src/app
 
 COPY package.json .
 COPY package-lock.json .
-COPY turbo.json .
 
+COPY packages ./packages
+COPY app ./app
 
-COPY app/src ./app/src
+RUN npm ci --loglevel notice --ignore-scripts
 
-RUN npm ci --loglevel notice
-
+ENV NODE_ENV=production
 ENV GIT_SHA=$GIT_SHA
-ENV NODE_ENV=dev
-ENV APP_RELEASE=true
 
 RUN npm run build
 
 # --------------------------------
 
-# Stage 3/3 - App run
-FROM node:22-alpine
+# Stage 2/2 - App run
+FROM base
+
 ARG GIT_SHA
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app/apps/app-1
 
-COPY --from=pins-web-builder /usr/src/app ./
-
-WORKDIR /usr/src/app/app/src
-
+ENV NODE_ENV=production
 ENV GIT_SHA=$GIT_SHA
-ENV NODE_ENV=dev
-ENV APP_RELEASE=true
 
 # TODO: Perhaps use `RUN npm ci --production` to shrink the size of the container
 
