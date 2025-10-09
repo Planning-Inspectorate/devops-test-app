@@ -13,23 +13,22 @@
 		"build": "node app/src/util/build.js",
 		"start": "npm run build && node app/src/server.js",
 		"dev": "nodemon --watch app/src --ext js,scss,html,njk --exec \"npm run start\"",
-		"test": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules npx jest"
+		"test": "node --test"
 	},
 	"license": "MIT",
 	"dependencies": {
+		"body-parse": "^0.1.0",
 		"body-parser": "^1.20.2",
-		"dotenv": "^16.3.1",
+		"dotenv": "^16.6.1",
 		"express": "^5.1.0",
 		"express-validator": "^7.2.1",
-		"govuk-frontend": "^5.11.0",
+		"govuk-frontend": "^5.12.0",
 		"nunjucks": "^3.2.4",
-		"pino": "^9.7.0",
-		"pino-pretty": "^13.0.0"
-    },
+		"pino": "^9.13.1",
+		"pino-pretty": "^13.1.1"
+	},
 	"devDependencies": {
-		"cross-env": "^7.0.3",
-		"jest": "^29.7.0",
 		"nodemon": "^3.1.10",
-		"sass": "^1.89.0"
-    }
+		"sass": "^1.93.2"
+	}
 }
