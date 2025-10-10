@@ -1,3 +1,3 @@
-# template-app-service
+# DevOps Test App
 
-A template App Service - used for testing DevOps processes and updates
+A test service - used for testing DevOps processes and updates

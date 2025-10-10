@@ -1,18 +1,17 @@
 {
-	"name": "devops-test-app",
+	"name": "devops-test",
 	"version": "0.0.0",
 	"description": "Basic Hello World app for testing",
 	"private": true,
-	"main": "index.js",
+	"main": "src/server.ts",
 	"workspaces": [
-		"app/*",
-		"app/src/*"
+		"app"
 	],
 	"type": "module",
 	"scripts": {
-		"build": "node app/src/util/build.js",
-		"start": "npm run build && node app/src/server.js",
-		"dev": "nodemon --watch app/src --ext js,scss,html,njk --exec \"npm run start\"",
+		"build": "node app/src/util/build.ts",
+		"start": "npm run build && node app/src/server.ts",
+		"dev": "nodemon --watch app/src --ext js,ts,scss,html,njk --exec \"npm run start\"",
 		"test": "node --test"
 	},
 	"license": "MIT",
@@ -28,7 +27,11 @@
 		"pino-pretty": "^13.1.1"
 	},
 	"devDependencies": {
+		"@types/express": "^5.0.3",
+		"@types/node": "^24.7.0",
+		"@types/nunjucks": "^3.2.6",
 		"nodemon": "^3.1.10",
-		"sass": "^1.93.2"
+		"sass": "^1.93.2",
+		"typescript": "^5.9.3"
 	}
 }
