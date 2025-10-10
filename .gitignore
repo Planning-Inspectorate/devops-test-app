@@ -111,3 +111,5 @@ providers-tmp.tf
 # Structurizr
 workspace.json
 .structurizr/*
+
+.static

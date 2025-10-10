@@ -1,17 +1,11 @@
 {
-	"name": "template-app-service",
+  "name": "devops-test-app",
   "version": "0.0.0",
   "description": "Basic Hello World app for testing",
   "main": "index.js",
-	"private": true,
-	"workspaces": [
-		"app/*"
-	],
-	"engines": {
-		"node": ">=18.0.0 <19.0.0"
-	},
+  "private": true,
   "type": "module",
-	"scripts": {
+  "scripts": {
     "build": "node src/util/build.js",
     "start": "npm run build && node src/server.js",
     "dev": "nodemon --watch src --ext js,scss,html,njk --exec \"npm run start\"",
