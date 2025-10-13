@@ -52,8 +52,8 @@ extends:
                 parameters:
                   appName: pins-app-template-web-$(ENVIRONMENT)
                   appResourceGroup: $(resourceGroup)
-                  sourceSlot: staging
-                  targetSlot: production
+                  appStagingSlotName: staging
+                  appTargetSlotName: production
               - template: ../steps/azure_web_app_verify_git_hash.yml
                 parameters:
                   appName: template production slot
