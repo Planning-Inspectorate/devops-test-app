@@ -63,11 +63,6 @@ module "template_app_web" {
     WEBSITE_AUTH_AAD_ALLOWED_TENANTS         = data.azurerm_client_config.current.tenant_id
   }
 
-  slot_setting_overrides = {
-    MICROSOFT_PROVIDER_AUTHENTICATION_SECRET = local.key_vault_refs["microsoft-provider-authentication-secret"]
-    WEBSITE_AUTH_AAD_ALLOWED_TENANTS         = data.azurerm_client_config.current.tenant_id
-  }
-
   providers = {
     azurerm         = azurerm
     azurerm.tooling = azurerm.tooling
