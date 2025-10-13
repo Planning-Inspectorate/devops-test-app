@@ -7,7 +7,7 @@ resources:
       type: github
       endpoint: Planning-Inspectorate
       name: Planning-Inspectorate/common-pipeline-templates
-      ref: refs/tags/release/3.20.3
+      ref: refs/tags/release/3.24.0
   pipelines:
     - pipeline: build
       source: Build
@@ -23,9 +23,9 @@ extends:
     environments:
       - name: Dev
     deploymentStages:
-      - name: Deploy
+      - name: Stage
         deploymentJobs:
-          - name: Deploy App
+          - name: stage App
             steps:
               - template: ../steps/azure_web_app_deploy_slot.yml
                 parameters:
@@ -33,11 +33,31 @@ extends:
                   appResourceGroup: $(resourceGroup)
                   azurecrName: $(azurecrName)
                   repository: devops/template
-                  slot: default
+                  slot: staging
               - template: ../steps/azure_web_app_verify_git_hash.yml
                 parameters:
                   appName: template staging slot
                   appUrl: $(deploySlotOutputs.slotUrl)/health
+                  buildCommit: $(resources.pipeline.build.sourceCommit)
+                  appRegistrationClientId: $(appRegistrationClientId)
+                  auth_enabled: "true"
+                  env: $(ENVIRONMENT)
+      - name: Deploy
+        dependsOn:
+          - Stage
+        deploymentJobs:
+          - name: deploy App
+            steps:
+              - template: ../steps/azure_web_app_slot_swap.yml
+                parameters:
+                  appName: pins-app-template-web-$(ENVIRONMENT)
+                  appResourceGroup: $(resourceGroup)
+                  appStagingSlotName: staging
+                  appTargetSlotName: production
+              - template: ../steps/azure_web_app_verify_git_hash.yml
+                parameters:
+                  appName: template production slot
+                  appUrl: $(WEB_URL)/health
                   buildCommit: $(resources.pipeline.build.sourceCommit)
                   appRegistrationClientId: $(appRegistrationClientId)
                   auth_enabled: "true"

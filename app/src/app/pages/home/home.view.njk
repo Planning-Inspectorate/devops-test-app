@@ -105,6 +105,21 @@
 					text: "Save and continue 2"
 				}) }}
 			</form>
+
+			<form action="" method="post" novalidate>
+			    {{ govukInput({
+                    label: {
+                        text: "What is the time of the event?",
+                        classes: "govuk-label--l",
+                        isPageHeading: true
+                    },
+                    id: "event-location",
+                    name: "eventLocation"
+                }) }}
+
+                {{ govukButton({
+                    text: "Save and continue 3"
+                }) }}
 		</div>
 	</div>
 {% endblock %}
