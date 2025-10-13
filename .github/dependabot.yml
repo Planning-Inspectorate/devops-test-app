@@ -9,6 +9,10 @@ updates:
     directory: '/' # Location of package manifests
     schedule:
       interval: 'weekly'
+    groups:
+      all: # only a test app, group all dependency updates
+        patterns:
+          - '*'
   - package-ecosystem: 'terraform'
     directory: '/infrastructure' # Location of package manifests
     schedule:
