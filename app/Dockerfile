@@ -10,7 +10,6 @@ WORKDIR /usr/src/app
 COPY package.json .
 COPY package-lock.json .
 
-COPY packages ./packages
 COPY app ./app
 
 RUN npm ci --loglevel notice --ignore-scripts
