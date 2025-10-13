@@ -48,7 +48,7 @@ extends:
         deploymentJobs:
           - name: deploy App
             steps:
-              - template: ../steps/azure_web_app_swap_slots.yml
+              - template: ../steps/azure_web_app_slot_swap.yml
                 parameters:
                   appName: pins-app-template-web-$(ENVIRONMENT)
                   appResourceGroup: $(resourceGroup)
