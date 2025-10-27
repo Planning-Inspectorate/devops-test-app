@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+set -e
+
 export DEBIAN_FRONTEND=noninteractive
 
 sudo echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
@@ -40,20 +43,22 @@ sudo apt-get install -y --no-install-recommends \
   git-lfs \
   git-ftp
 
-# Python (Using Ubuntu 22.04 default version: Python 3.10)
+# Python (Ubuntu 22 uses 3.10 by default)
 sudo apt-get install -y --no-install-recommends \
   python3 \
   python3-distutils \
   python3-pip
 
-pip3 install urllib3
+## Install Chromium for test images
+wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+sudo apt-get update
+sudo apt-get install -y google-chrome-stable
 
 # Docker Engine
 sudo apt-get install -y docker.io
-
 sudo usermod -aG docker $USER
 newgrp docker
-
 sudo systemctl enable docker.service
 sudo systemctl enable containerd.service
 
@@ -61,13 +66,13 @@ sudo systemctl enable containerd.service
 sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
-# PowerShell
+# Powershell
 sudo snap install powershell --classic
 
-# Terraform 1.11.4
+# Terraform
 curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
 sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-sudo apt-get install -y terraform=1.11.4-1  # hyphen needed for repo
+sudo apt-get install -y terraform=1.13.3-1
 
 # Terragrunt 0.55.1
 sudo curl -s -L "https://github.com/gruntwork-io/terragrunt/releases/download/v0.55.1/terragrunt_linux_amd64" -o /usr/bin/terragrunt && chmod 777 /usr/bin/terragrunt
@@ -79,36 +84,40 @@ python3 -m pip install -U checkov==3.2.405
 # TFLint
 curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
-# NVM Setup
+# NVM
 sudo mkdir /usr/local/nvm && chmod -R 777 /usr/local/nvm
 sudo curl -o- https://raw.githubusercontent.com/creationix/nvm/master/install.sh | NVM_DIR=/usr/local/nvm bash
 
 export NVM_DIR="/usr/local/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-export PATH="$PATH:$NVM_DIR"
 
-sudo tee /etc/skel/.bashrc > /dev/null <<"EOT"
-export NVM_DIR="/usr/local/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-export PATH="$PATH:$NVM_DIR"
-EOT
-
-# Install Node Versions
+# Install Node versions
+nvm install 24
 nvm install 22
 nvm install 20
-nvm install 18
-nvm install 16
-nvm install 15
-nvm install 14
 
-nvm alias default 20
+# Set default Node
+nvm alias default 22
 nvm use default
+
+# Now safe to set PATH to default Node bin
+DEFAULT_NODE=$(nvm version default)
+export PATH="$NVM_DIR/versions/node/$DEFAULT_NODE/bin:$PATH"
+
+# Persist for all users
+sudo tee /etc/profile.d/nvm.sh > /dev/null <<"EOT"
+export NVM_DIR="/usr/local/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+DEFAULT_NODE=$(nvm version default 2>/dev/null)
+if [ "$DEFAULT_NODE" != "N/A" ]; then
+  export PATH="$NVM_DIR/versions/node/$DEFAULT_NODE/bin:$PATH"
+fi
+EOT
 
 # Azure CLI
 curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+sudo apt-get update
+sudo apt-get install -y apt-transport-https
 
-sudo apt-get update; \
-  sudo apt-get install -y apt-transport-https && \
-  sudo apt-get update &&
-
+# Deprovision for image capture
 /usr/sbin/waagent -force -deprovision+user && export HISTSIZE=0 && sync
