@@ -25,6 +25,34 @@ resources:
       name: Planning-Inspectorate/common-pipeline-templates
       ref: refs/heads/main
 
+stages:
+  - stage: TestNodeAvailability
+    displayName: 'Test Node.js Availability'
+    jobs:
+      - job: TestNode
+        displayName: 'Test Node.js on Self-Hosted Agent'
+        pool:
+          name: pins-template-test
+        steps:
+          - script: |
+              echo "Testing Node.js availability on self-hosted agent..."
+              echo "Current PATH: $PATH"
+              echo "---"
+              node -v
+              npm -v
+              echo "---"
+              which node
+              which npm
+              echo "---"
+              echo "Node.js test completed successfully!"
+            displayName: 'Test Node.js Direct Access'
+            
+          - script: |
+              echo "Testing if we can run npm commands..."
+              npm --version
+              npm config get registry
+            displayName: 'Test NPM Commands'
+
 extends:
   template: stages/wrapper_ci.yml@templates
   parameters:
