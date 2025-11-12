@@ -114,6 +114,21 @@ if [ "$DEFAULT_NODE" != "N/A" ]; then
 fi
 EOT
 
+# Make Node.js available globally for Azure Pipelines by adding to /etc/environment
+# This ensures all pipeline jobs have access to Node without additional setup
+NODE_20_PATH=$(find /usr/local/nvm/versions/node -name "v20.*" | head -1)/bin
+if [ -d "$NODE_20_PATH" ]; then
+  echo "PATH=\"$NODE_20_PATH:\$PATH\"" | sudo tee -a /etc/environment
+  echo "Added Node.js 20 to global PATH: $NODE_20_PATH"
+else
+  echo "Warning: Node.js 20 path not found"
+fi
+
+# Also add to systemd environment for services
+sudo mkdir -p /etc/systemd/system.conf.d
+echo "[Manager]" | sudo tee /etc/systemd/system.conf.d/nodejs.conf
+echo "DefaultEnvironment=\"PATH=$NODE_20_PATH:\$PATH\"" | sudo tee -a /etc/systemd/system.conf.d/nodejs.conf
+
 # Azure CLI
 curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 sudo apt-get update
