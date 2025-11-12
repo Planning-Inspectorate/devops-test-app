@@ -33,21 +33,36 @@ extends:
     validateName: Validate Terraform
     validationSteps:
       - script: |
-          echo "=== Testing Node.js Availability on Self-Hosted Agent ==="
+          echo "=== Testing Node.js Installation on Self-Hosted Agent ==="
           echo "Current PATH: $PATH"
           echo "---"
-          echo "Testing direct Node.js access..."
-          node -v || echo "Node.js not found in PATH"
-          npm -v || echo "NPM not found in PATH"
+          echo "1. Testing direct access (should fail)..."
+          node -v 2>/dev/null || echo "❌ Node.js not found in PATH"
+          npm -v 2>/dev/null || echo "❌ NPM not found in PATH"
           echo "---"
-          echo "Checking executable locations..."
-          which node || echo "Node.js executable not found"
-          which npm || echo "NPM executable not found"
+          echo "2. Checking if NVM is installed..."
+          if [ -d "/usr/local/nvm" ]; then
+            echo "✅ NVM directory exists at /usr/local/nvm"
+            ls -la /usr/local/nvm/versions/node/ 2>/dev/null || echo "❌ No Node versions found"
+          else
+            echo "❌ NVM directory not found"
+          fi
           echo "---"
-          echo "Testing NPM functionality..."
-          npm --version || echo "NPM command failed"
-          echo "=== Node.js Test Completed ==="
-        displayName: 'Test Node.js Direct Access'
+          echo "3. Testing NVM environment setup..."
+          export NVM_DIR="/usr/local/nvm"
+          if [ -s "$NVM_DIR/nvm.sh" ]; then
+            echo "✅ NVM script found, sourcing..."
+            source "$NVM_DIR/nvm.sh"
+            echo "Available Node versions:"
+            nvm list || echo "❌ NVM list failed"
+            echo "---"
+            echo "4. Testing Node.js after NVM setup..."
+            node -v && npm -v || echo "❌ Node still not available after NVM setup"
+          else
+            echo "❌ NVM script not found at $NVM_DIR/nvm.sh"
+          fi
+          echo "=== Node.js Investigation Completed ==="
+        displayName: 'Investigate Node.js Installation'
       - template: steps/terraform_format.yml@templates
       - template: steps/terraform_tflint.yml@templates
       - template: steps/run_checkov.yml@templates
