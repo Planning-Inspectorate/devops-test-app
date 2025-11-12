@@ -20,8 +20,15 @@ jobs:
     timeoutInMinutes: 60
     pool: pins-odt-agent-pool-tests
     steps:
-      - script: node -v && npm -v
-        displayName: 'Check Node.js versions'
+      - script: |
+          export NVM_DIR="/usr/local/nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          NODE_VERSION=$(nvm list | grep "v20" | tail -1 | sed 's/[^v0-9.]//g')
+          NODE_PATH="/usr/local/nvm/versions/node/$NODE_VERSION/bin"
+          echo "##vso[task.setvariable variable=PATH]$NODE_PATH:$PATH"
+          echo "Node.js 20 path: $NODE_PATH"
+          node -v && npm -v
+        displayName: 'Setup Node.js 20 and check versions'
 
       - task: Npm@1
         inputs:
