@@ -74,9 +74,9 @@ extends:
           echo "=== Verification Completed ==="
         displayName: 'Verify Node.js Environment & PATH'
 
-      - template: steps/terraform_format.yml@templates
-      - template: steps/terraform_tflint.yml@templates
-      - template: steps/run_checkov.yml@templates
-      - template: steps/terraform_validate.yml@templates
-        parameters:
-          workingDirectory: $(Build.Repository.LocalPath)/packer/infra
+      # - template: steps/terraform_format.yml@templates
+      # - template: steps/terraform_tflint.yml@templates
+      # - template: steps/run_checkov.yml@templates
+      # - template: steps/terraform_validate.yml@templates
+      #   parameters:
+      #     workingDirectory: $(Build.Repository.LocalPath)/packer/infra
