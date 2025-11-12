@@ -20,30 +20,19 @@ jobs:
     timeoutInMinutes: 60
     pool: pins-odt-agent-pool-tests
     steps:
-      - script: |
-          export NVM_DIR="/usr/local/nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm use 20
-          node -v
-          npm -v
-        displayName: 'Setup Node.js environment and check versions'
+      - script: node -v && npm -v
+        displayName: 'Check Node.js versions'
 
-      - script: |
-          export NVM_DIR="/usr/local/nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm use 20
-          cd $(System.DefaultWorkingDirectory)/apps/e2e
-          npm install
+      - task: Npm@1
+        inputs:
+          command: "install"
+          workingDir: $(System.DefaultWorkingDirectory)/apps/e2e
         displayName: "Install Dependencies"
 
       - task: Bash@3
         inputs:
           targetType: 'inline'
-          script: |
-            export NVM_DIR="/usr/local/nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            nvm use 20
-            npx cypress run --spec "cypress/e2e/back-office-applications/addRepresentation.spec.js"
+          script: npx cypress run --spec "cypress/e2e/back-office-applications/addRepresentation.spec.js"
           workingDirectory: 'apps/e2e'
 
         env:
