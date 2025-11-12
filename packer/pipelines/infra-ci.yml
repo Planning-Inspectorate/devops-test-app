@@ -33,36 +33,23 @@ extends:
     validateName: Validate Terraform
     validationSteps:
       - script: |
-          echo "=== Testing Node.js Installation on Self-Hosted Agent ==="
-          echo "Current PATH: $PATH"
-          echo "---"
-          echo "1. Testing direct access (should fail)..."
-          node -v 2>/dev/null || echo "❌ Node.js not found in PATH"
-          npm -v 2>/dev/null || echo "❌ NPM not found in PATH"
-          echo "---"
-          echo "2. Checking if NVM is installed..."
-          if [ -d "/usr/local/nvm" ]; then
-            echo "✅ NVM directory exists at /usr/local/nvm"
-            ls -la /usr/local/nvm/versions/node/ 2>/dev/null || echo "❌ No Node versions found"
-          else
-            echo "❌ NVM directory not found"
-          fi
-          echo "---"
-          echo "3. Testing NVM environment setup..."
+          echo "=== Testing Node.js Setup Without UseNode@1 ==="
           export NVM_DIR="/usr/local/nvm"
-          if [ -s "$NVM_DIR/nvm.sh" ]; then
-            echo "✅ NVM script found, sourcing..."
-            source "$NVM_DIR/nvm.sh"
-            echo "Available Node versions:"
-            nvm list || echo "❌ NVM list failed"
-            echo "---"
-            echo "4. Testing Node.js after NVM setup..."
-            node -v && npm -v || echo "❌ Node still not available after NVM setup"
-          else
-            echo "❌ NVM script not found at $NVM_DIR/nvm.sh"
-          fi
-          echo "=== Node.js Investigation Completed ==="
-        displayName: 'Investigate Node.js Installation'
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use 20
+          NODE_PATH=$(dirname $(nvm which 20))
+          echo "##vso[task.setvariable variable=PATH]$NODE_PATH:$PATH"
+          echo "✅ Using Node.js $(node -v) and NPM $(npm -v)"
+          echo "✅ Node.js path set to: $NODE_PATH"
+          echo "---"
+          echo "Testing npm functionality..."
+          npm --version
+          npm config get registry
+          echo "---"
+          echo "🎉 Node.js setup completed successfully without UseNode@1!"
+          echo "=== Test Completed ==="
+        displayName: 'Test Node.js Setup (No UseNode@1)'
+
       - template: steps/terraform_format.yml@templates
       - template: steps/terraform_tflint.yml@templates
       - template: steps/run_checkov.yml@templates
