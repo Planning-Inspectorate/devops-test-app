@@ -74,8 +74,14 @@ extends:
           echo "=== Direct Access Test Completed ==="
         displayName: 'Test Direct Node.js Access (Symlinks)'
 
-      - script:
+      - script: |
+          export NVM_DIR="/usr/local/nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
           nvm use 20
+          NODE_PATH=$(dirname $(nvm which 20))
+          echo "##vso[task.setvariable variable=PATH]$NODE_PATH:$PATH"
+          echo "✅ Switched to Node.js $(node -v) from default v22"
+        displayName: 'Switch to Node.js 20'
 
       # - template: steps/terraform_format.yml@templates
       # - template: steps/terraform_tflint.yml@templates
