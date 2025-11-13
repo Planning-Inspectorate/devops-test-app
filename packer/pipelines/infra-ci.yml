@@ -30,14 +30,14 @@ extends:
   parameters:
     pool:
       name: pins-template-test
-    validateName: Validate Terraform
+    # validateName: Validate Terraform
     validationSteps:
       - script: |
           echo "=== Agent Environment Information ==="
           echo "Current working directory: $(pwd)"
-          echo "Current user: $(whoami)"
           echo "###########################################################"
           echo "Checking NVM installation..."
+
           if [ -d "/usr/local/nvm" ]; then
             echo "✅ NVM directory exists at: /usr/local/nvm"
             echo "NVM directory contents:"
@@ -48,6 +48,7 @@ extends:
           else
             echo "❌ NVM directory not found at /usr/local/nvm"
           fi
+
           echo "###########################################################"
           echo "Current PATH: $PATH"
           echo "=== Environment Check Completed ==="
@@ -56,19 +57,19 @@ extends:
       - script: |
           echo "=== Testing Direct Node.js Access (No Setup Required) ==="
           echo "Current PATH: $PATH"
-          echo "---"
+          echo "###########################################################"
           echo "Testing Node.js availability..."
           node -v || echo "❌ Node.js not found"
           npm -v || echo "❌ NPM not found"
-          echo "---"
+          echo "###########################################################"
           echo "Testing executable locations..."
           which node || echo "❌ Node.js executable not found"
           which npm || echo "❌ NPM executable not found"
-          echo "---"
+          echo "###########################################################"
           echo "Testing NPM functionality..."
           npm --version || echo "❌ NPM command failed"
           npm config get registry || echo "❌ NPM config failed"
-          echo "---"
+          echo "###########################################################"
           echo "� Goal: Node.js should work directly without any pipeline setup!"
           echo "=== Direct Access Test Completed ==="
         displayName: 'Test Direct Node.js Access (Symlinks)'
