@@ -100,22 +100,8 @@ nvm install 20
 nvm alias default 22
 nvm use default
 
-# Now safe to set PATH to default Node bin
-DEFAULT_NODE=$(nvm version default)
-export PATH="$NVM_DIR/versions/node/$DEFAULT_NODE/bin:$PATH"
-
-# Persist for all users
-sudo tee /etc/profile.d/nvm.sh > /dev/null <<"EOT"
-export NVM_DIR="/usr/local/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-DEFAULT_NODE=$(nvm version default 2>/dev/null)
-if [ "$DEFAULT_NODE" != "N/A" ]; then
-  export PATH="$NVM_DIR/versions/node/$DEFAULT_NODE/bin:$PATH"
-fi
-EOT
-
 # Create symlinks to make Node.js 22 available globally without any pipeline setup
-# Lines 119-130 are Co-pilot code used for testing purposes
+# Lines 105-116 are Co-pilot code used for testing purposes
 DEFAULT_NODE_VERSION=$(find /usr/local/nvm/versions/node -name "v22.*" -type d | head -1)
 if [ -n "$DEFAULT_NODE_VERSION" ] && [ -d "$DEFAULT_NODE_VERSION/bin" ]; then
   # Create symlinks in /usr/local/bin (already in PATH)
