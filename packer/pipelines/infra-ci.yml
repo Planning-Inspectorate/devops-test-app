@@ -74,6 +74,9 @@ extends:
           echo "=== Direct Access Test Completed ==="
         displayName: 'Test Direct Node.js Access (Symlinks)'
 
+      - script:
+          nvm use 20
+
       # - template: steps/terraform_format.yml@templates
       # - template: steps/terraform_tflint.yml@templates
       # - template: steps/run_checkov.yml@templates
