@@ -114,8 +114,20 @@ if [ "$DEFAULT_NODE" != "N/A" ]; then
 fi
 EOT
 
-# Node.js is installed via NVM above and available through the profile script
-# Azure Pipelines can access it by sourcing the NVM environment as needed
+# Create symlinks to make Node.js 22 available globally without any pipeline setup
+# Lines 119-130 are Co-pilot code used for testing purposes
+DEFAULT_NODE_VERSION=$(find /usr/local/nvm/versions/node -name "v22.*" -type d | head -1)
+if [ -n "$DEFAULT_NODE_VERSION" ] && [ -d "$DEFAULT_NODE_VERSION/bin" ]; then
+  # Create symlinks in /usr/local/bin (already in PATH)
+  sudo ln -sf "$DEFAULT_NODE_VERSION/bin/node" /usr/local/bin/node
+  sudo ln -sf "$DEFAULT_NODE_VERSION/bin/npm" /usr/local/bin/npm
+  sudo ln -sf "$DEFAULT_NODE_VERSION/bin/npx" /usr/local/bin/npx
+  
+  echo "✅ Created Node.js 22 symlinks in /usr/local/bin/"
+  echo "✅ Node.js now available globally without pipeline setup"
+else
+  echo "❌ Node.js 22 not found, skipping symlink creation"
+fi
 
 # Azure CLI
 curl -sL https://aka.ms/InstallAzureCLIDeb | bash
