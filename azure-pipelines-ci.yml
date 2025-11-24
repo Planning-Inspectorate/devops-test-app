@@ -18,10 +18,6 @@ trigger:
       - infrastructure
       - packer
 
-variables:
-  - name: npm_config_cache
-    value: $(Pipeline.Workspace)/.npm
-
 resources:
   repositories:
     - repository: templates
