@@ -1,36 +1,39 @@
 {
-	"name": "devops-test",
-	"version": "0.0.0",
-	"description": "Basic Hello World app for testing",
-	"private": true,
-	"main": "src/server.ts",
-	"workspaces": [
-		"app"
-	],
-	"type": "module",
-	"scripts": {
-		"build": "node app/src/util/build.ts",
-		"start": "npm run build && node app/src/server.ts",
-		"dev": "nodemon --watch app/src --ext js,ts,scss,html,njk --exec \"npm run start\"",
-		"test": "node --test"
-	},
-	"license": "MIT",
-	"dependencies": {
-		"body-parser": "^2.2.0",
-		"dotenv": "^17.2.3",
-		"express": "^5.1.0",
-		"express-validator": "^7.3.0",
-		"govuk-frontend": "^5.13.0",
-		"nunjucks": "^3.2.4",
-		"pino": "^10.1.0",
-		"pino-pretty": "^13.1.2"
-	},
-	"devDependencies": {
-		"@types/express": "^5.0.5",
-		"@types/node": "^24.10.1",
-		"@types/nunjucks": "^3.2.6",
-		"nodemon": "^3.1.11",
-		"sass": "^1.94.0",
-		"typescript": "^5.9.3"
-	}
+  "name": "devops-test",
+  "version": "0.0.0",
+  "description": "Basic Hello World app for testing",
+  "private": true,
+  "main": "src/server.ts",
+  "workspaces": [
+    "app"
+  ],
+  "type": "module",
+  "scripts": {
+    "build": "node app/src/util/build.ts",
+    "commitlint": "commitlint --from=$(git rev-parse $(git cherry origin/main | head -n 1 | cut -c 3-)^1)",
+    "dev": "nodemon --watch app/src --ext js,ts,scss,html,njk --exec \"npm run start\"",
+    "start": "npm run build && node app/src/server.ts",
+    "test": "node --test"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-validator": "^7.3.0",
+    "govuk-frontend": "^5.13.0",
+    "nunjucks": "^3.2.4",
+    "pino": "^10.1.0",
+    "pino-pretty": "^13.1.2"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
+    "@types/express": "^5.0.5",
+    "@types/node": "^24.10.1",
+    "@types/nunjucks": "^3.2.6",
+    "nodemon": "^3.1.11",
+    "sass": "^1.94.0",
+    "typescript": "^5.9.3"
+  }
 }
