@@ -18,6 +18,10 @@ trigger:
       - infrastructure
       - packer
 
+variables:
+  - name: npm_config_cache
+    value: $(Pipeline.Workspace)/.npm
+
 resources:
   repositories:
     - repository: templates
@@ -26,16 +30,12 @@ resources:
       name: Planning-Inspectorate/common-pipeline-templates
       ref: refs/tags/release/3.24.2
 
-#variables:
-#  npm_config_cache: $(Pipeline.Workspace)/.npm
-
 extends:
   template: stages/wrapper_ci.yml@templates
   parameters:
     gitFetchDepth: 0
     globalVariables:
       - template: azure-pipelines-variables.yml@self
-#      - npm_config_cache: $(Pipeline.Workspace)/.npm
     validationJobs:
       - name: Run Linting & Tests
         steps:
@@ -44,7 +44,7 @@ extends:
               key: 'npm | "$(Agent.OS)" | package-lock.json'
               restoreKeys: |
                 npm | "$(Agent.OS)"
-              path: $(Pipeline.Workspace)/.npm
+              path: $(npm_config_cache)
             displayName: Cache npm
           - template: ../steps/node_script.yml
             parameters:
