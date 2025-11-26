@@ -35,23 +35,21 @@ extends:
     validationJobs:
       - name: Run Linting & Tests
         steps:
-#          - task: Cache@2
-#            inputs:
-#              key: 'npm | "$(Agent.OS)" | package-lock.json'
-#              restoreKeys: |
-#                npm | "$(Agent.OS)"
-#              path: $(npm_config_cache)
-#            displayName: Cache npm
-#          - script: npm ci --cache $(npm_config_cache)
-#            displayName: NPM Install Dependencies
-#          - script: |
-#              npm cache ls
-#              npm cache verify
-#            displayName: NPM Show cache
+          - task: Cache@2
+            inputs:
+              key: 'npm | "$(Agent.OS)" | package-lock.json'
+              restoreKeys: |
+                npm | "$(Agent.OS)"
+              path: $(npm_config_cache)
+            displayName: Cache npm
           - template: ../steps/node_script.yml
             parameters:
               nodeVersion: 22
-              script: npm ci
+              script: npm ci --cache $(npm_config_cache)
+          - script: |
+              npm cache ls
+              npm cache verify
+            displayName: NPM Show cache
           - template: ../steps/node_script.yml
             parameters:
               nodeVersion: 22
