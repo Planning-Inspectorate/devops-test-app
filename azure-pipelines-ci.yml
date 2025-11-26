@@ -45,11 +45,8 @@ extends:
           - template: ../steps/node_script.yml
             parameters:
               nodeVersion: 22
-              script: npm ci --cache $(npm_config_cache)
-          - script: |
-              npm cache ls
-              npm cache verify
-            displayName: NPM Show cache
+              script: npm ci --cache $(npm_config_cache) --prefer-offline
+              displayName: Install npm packages
           - template: ../steps/node_script.yml
             parameters:
               nodeVersion: 22
