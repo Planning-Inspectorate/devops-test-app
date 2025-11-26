@@ -39,7 +39,7 @@ extends:
             inputs:
               key: 'npm | "$(Agent.OS)" | package-lock.json'
               restoreKeys: |
-                npm | "$(Agent.OS)"
+                npm | "$(Agent.OS)" | package-lock.json
               path: $(npm_config_cache)
             displayName: Cache npm
           - template: ../steps/node_script.yml
