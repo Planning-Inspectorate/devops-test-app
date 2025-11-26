@@ -43,7 +43,7 @@ extends:
           - template: ../steps/node_script.yml
             parameters:
               nodeVersion: 22
-              script: npm ci
+              script: npm ci --cache $(npm_config_cache)
           - template: ../steps/node_script.yml
             parameters:
               nodeVersion: 22
