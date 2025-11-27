@@ -46,13 +46,11 @@ extends:
             parameters:
               nodeVersion: 22
               script: npm ci
-              environmentVariables : [
-                npm_config_cache: $(npm_config_cache)
-              ]
+              environmentVariables :
+                - npm_config_cache=$(npm_config_cache)
           - template: ../steps/node_script.yml
             parameters:
               nodeVersion: 22
               script: npm run test
-              environmentVariables: [
-                npm_config_cache: $(npm_config_cache)
-              ]
+              environmentVariables:
+                - npm_config_cache=$(npm_config_cache)
