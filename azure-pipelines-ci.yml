@@ -45,12 +45,12 @@ extends:
           - template: ../steps/node_script.yml
             parameters:
               nodeVersion: 22
-              script: npm ci --prefer-offline --loglevel=verbose
+              script: npm ci --offline --loglevel=verbose
               environmentVariables:
                 npm_config_cache: $(Pipeline.Workspace)/.npm
           - template: ../steps/node_script.yml
             parameters:
               nodeVersion: 22
-              script: npm run test --prefer-offline --loglevel=verbose
+              script: npm run test --offline --loglevel=verbose
               environmentVariables:
                 npm_config_cache: $(Pipeline.Workspace)/.npm
