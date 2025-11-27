@@ -40,17 +40,17 @@ extends:
               key: 'npm | "$(Agent.OS)" | package-lock.json'
               restoreKeys: |
                 npm | "$(Agent.OS)" | package-lock.json
-              path: $(npm_config_cache)
+              path: $(Pipeline.Workspace)/.npm
             displayName: Cache npm
           - template: ../steps/node_script.yml
             parameters:
               nodeVersion: 22
               script: npm ci
               environmentVariables :
-                - npm_config_cache=$(npm_config_cache)
+                - npm_config_cache=$(Pipeline.Workspace)/.npm
           - template: ../steps/node_script.yml
             parameters:
               nodeVersion: 22
               script: npm run test
               environmentVariables:
-                - npm_config_cache=$(npm_config_cache)
+                - npm_config_cache=$(Pipeline.Workspace)/.npm
