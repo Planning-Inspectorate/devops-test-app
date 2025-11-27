@@ -37,9 +37,9 @@ extends:
         steps:
           - task: Cache@2
             inputs:
-              key: 'npm | "$(Agent.OS)" | package-lock.json'
+              key: 'package-lock.json'
               restoreKeys: |
-                npm | "$(Agent.OS)" | package-lock.json
+                package-lock.json
               path: $(npm_config_cache)
             displayName: Cache npm
           - template: ../steps/node_script.yml
