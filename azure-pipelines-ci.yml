@@ -45,7 +45,7 @@ extends:
           - template: ../steps/node_script.yml
             parameters:
               nodeVersion: 22
-              script: npm ci
+              script: npm ci --prefer-offline --no-audit --no-fund
               environmentVariables:
                 npm_config_cache: $(Pipeline.Workspace)/.npm
           - template: ../steps/node_script.yml
@@ -53,4 +53,4 @@ extends:
               nodeVersion: 22
               script: npm run test
               environmentVariables:
-                - npm_config_cache=$(Pipeline.Workspace)/.npm
+                npm_config_cache: $(Pipeline.Workspace)/.npm
