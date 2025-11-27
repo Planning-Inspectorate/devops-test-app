@@ -42,27 +42,17 @@ extends:
                 npm | "$(Agent.OS)" | package-lock.json
               path: $(npm_config_cache)
             displayName: Cache npm
-          - script: |
-              echo "##[group]exporting npm_config_cache"
-              export npm_config_cache=$(npm_config_cache)
-              npm ci --cache $(npm_config_cache) --prefer-offline
-              echo "##[endgroup]"
-            displayName: CI
-          - script: |
-              echo "##[group]exporting npm_config_cache"
-              export npm_config_cache=$(npm_config_cache)
-              npm run test
-              echo "##[endgroup]"
-            displayName: Run Tests
-#          - template: ../steps/node_script.yml
-#            parameters:
-#              nodeVersion: 22
-#              script: npm ci
-#              env:
-#                npm_config_cache: $(npm_config_cache)
-#          - template: ../steps/node_script.yml
-#            parameters:
-#              nodeVersion: 22
-#              script: npm run test
-#              env:
-#                npm_config_cache: $(npm_config_cache)
+          - template: ../steps/node_script.yml
+            parameters:
+              nodeVersion: 22
+              script: npm ci
+              environmentVariables : [
+                npm_config_cache: $(npm_config_cache)
+              ]
+          - template: ../steps/node_script.yml
+            parameters:
+              nodeVersion: 22
+              script: npm run test
+              environmentVariables: [
+                npm_config_cache: $(npm_config_cache)
+              ]
