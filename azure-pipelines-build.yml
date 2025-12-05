@@ -1,20 +1,6 @@
-pr:
-  branches:
-    include:
-      - main
-  paths:
-    exclude:
-      - infrastructure
-      - packer
+pr: none
 
-trigger:
-  branches:
-    include:
-      - main
-  paths:
-    exclude:
-      - infrastructure
-      - packer
+trigger: none
 
 resources:
   repositories:
@@ -23,6 +9,13 @@ resources:
       endpoint: Planning-Inspectorate
       name: Planning-Inspectorate/common-pipeline-templates
       ref: refs/tags/release/3.24.2
+  pipelines:
+    - pipeline: Azure Pipeline CI
+      source: Azure Pipeline CI
+      trigger:
+        branches:
+          include:
+            - main
 
 extends:
   template: stages/wrapper_ci.yml@templates
@@ -33,10 +26,19 @@ extends:
     validationJobs:
       - name: Run Linting & Tests
         steps:
+          - task: Cache@2
+            inputs:
+              key: 'npm | "$(Agent.OS)" | package-lock.json'
+              restoreKeys: |
+                npm | "$(Agent.OS)" | package-lock.json
+              path: $(npm_config_cache)
+            displayName: Cache npm
           - template: ../steps/node_script.yml
             parameters:
               nodeVersion: 22
               script: npm ci
+              environmentVariables:
+                npm_config_cache: $(npm_config_cache)
           - template: ../steps/node_script.yml
             parameters:
               nodeVersion: 22

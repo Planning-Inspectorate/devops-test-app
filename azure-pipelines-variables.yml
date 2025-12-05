@@ -3,3 +3,4 @@ variables:
   resourceGroup: pins-rg-template-$(ENVIRONMENT)
   tagPrefix: template
   appRegistrationClientId: api://623081bf-a1f2-4cae-ba90-b5d264c46373
+  npm_config_cache: $(Pipeline.Workspace)/.npm
