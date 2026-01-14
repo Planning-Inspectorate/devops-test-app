@@ -28,6 +28,11 @@ variable "auth_config" {
     auth_client_id  = string
     applications_id = string
   })
+  default = {
+    auth_enabled    = false
+    auth_client_id  = ""
+    applications_id = ""
+  }
 }
 
 variable "common_config" {
