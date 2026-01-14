@@ -21,6 +21,7 @@ variable "apps_config" {
   })
 }
 
+# tflint-ignore: terraform_unused_declarations
 variable "auth_config" {
   description = "Config for the azure authentication"
   type = object({

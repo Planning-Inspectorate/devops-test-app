@@ -12,7 +12,7 @@ apps_config = {
 alerts_enabled = false
 
 auth_config = {
-  auth_enabled    = true
+  auth_enabled    = false
   auth_client_id  = "623081bf-a1f2-4cae-ba90-b5d264c46373"
   applications_id = "20838096-03c3-4e28-8053-ca7bda6b3e09"
   excluded_paths  = []
