@@ -37,17 +37,17 @@ module "template_app_web" {
   health_check_eviction_time_in_min = var.health_check_eviction_time_in_min
 
   #Easy Auth setting
-  # auth_config  {
-  #   auth_enabled           = var.auth_config.auth_enabled
-  #   require_authentication = var.auth_config.auth_enabled
-  #   auth_client_id         = var.auth_config.auth_client_id
-  #   #checkov:skip=CKV_SECRET_6: "Secret is securely stored in Key Vault"
-  #   auth_provider_secret = "MICROSOFT_PROVIDER_AUTHENTICATION_SECRET"
-  #   auth_tenant_endpoint = "https://login.microsoftonline.com/${data.azurerm_client_config.current.tenant_id}/v2.0"
-  #   allowed_applications = var.auth_config.application_id
-  #   allowed_audiences    = "https://${var.web_app_domain}/.auth/login/aad/callback"
-  #   excluded_paths       = []
-  # }
+  auth_config  {
+    auth_enabled           = var.auth_config.auth_enabled
+    # require_authentication = var.auth_config.auth_enabled
+    # auth_client_id         = var.auth_config.auth_client_id
+    # #checkov:skip=CKV_SECRET_6: "Secret is securely stored in Key Vault"
+    # auth_provider_secret = "MICROSOFT_PROVIDER_AUTHENTICATION_SECRET"
+    # auth_tenant_endpoint = "https://login.microsoftonline.com/${data.azurerm_client_config.current.tenant_id}/v2.0"
+    # allowed_applications = var.auth_config.application_id
+    # allowed_audiences    = "https://${var.web_app_domain}/.auth/login/aad/callback"
+    # excluded_paths       = []
+  }
 
   app_settings = {
     APPLICATIONINSIGHTS_CONNECTION_STRING      = local.key_vault_refs["app-insights-connection-string"]
