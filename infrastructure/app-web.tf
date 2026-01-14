@@ -40,15 +40,11 @@ module "template_app_web" {
   auth_config = merge(
     var.auth_config,
     {
-      auth_config = merge(
-        var.auth_config,
-        {
-          auth_provider_secret = "MICROSOFT_PROVIDER_AUTHENTICATION_SECRET"
-          auth_tenant_endpoint = "https://login.microsoftonline.com/${data.azurerm_client_config.current.tenant_id}/v2.0"
-          allowed_audiences    = "https://${var.web_app_domain}/.auth/login/aad/callback"
-        }
-      )
-
+      auth_provider_secret   = "MICROSOFT_PROVIDER_AUTHENTICATION_SECRET"
+      auth_tenant_endpoint   = "https://login.microsoftonline.com/${data.azurerm_client_config.current.tenant_id}/v2.0"
+      allowed_audiences      = "https://${var.web_app_domain}/.auth/login/aad/callback"
+      require_authentication = false
+      allowed_applications   = var.auth_config.applications_id
     }
   )
 
