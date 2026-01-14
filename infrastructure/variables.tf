@@ -24,11 +24,9 @@ variable "apps_config" {
 variable "auth_config" {
   description = "Config for the azure authentication"
   type = object({
-    auth_enabled           = bool
-    require_authentication = bool
-    auth_client_id         = string
-    allowed_audiences      = string
-    allowed_applications   = string
+    auth_enabled    = bool
+    auth_client_id  = string
+    applications_id = string
   })
 }
 
