@@ -27,11 +27,13 @@ variable "auth_config" {
     auth_enabled    = bool
     auth_client_id  = string
     applications_id = string
+    excluded_paths  = optional(list(string))
   })
   default = {
     auth_enabled    = false
     auth_client_id  = ""
     applications_id = ""
+    excluded_paths  = []
   }
 }
 

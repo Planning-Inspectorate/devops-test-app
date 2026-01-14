@@ -37,16 +37,20 @@ module "template_app_web" {
   health_check_eviction_time_in_min = var.health_check_eviction_time_in_min
 
   #Easy Auth setting
-  auth_config = try(var.auth_config.auth_enabled, false) ? {
-    auth_enabled           = var.auth_config.auth_enabled
-    require_authentication = var.auth_config.auth_enabled
-    auth_client_id         = var.auth_config.auth_client_id
-    auth_provider_secret   = "MICROSOFT_PROVIDER_AUTHENTICATION_SECRET"
-    auth_tenant_endpoint   = "https://login.microsoftonline.com/${data.azurerm_client_config.current.tenant_id}/v2.0"
-    allowed_applications   = var.auth_config.applications_id
-    allowed_audiences      = "https://${var.web_app_domain}/.auth/login/aad/callback"
-    excluded_paths         = []
-  } : null
+  auth_config = merge(
+    var.auth_config,
+    {
+      auth_config = merge(
+        var.auth_config,
+        {
+          auth_provider_secret = "MICROSOFT_PROVIDER_AUTHENTICATION_SECRET"
+          auth_tenant_endpoint = "https://login.microsoftonline.com/${data.azurerm_client_config.current.tenant_id}/v2.0"
+          allowed_audiences    = "https://${var.web_app_domain}/.auth/login/aad/callback"
+        }
+      )
+
+    }
+  )
 
   app_settings = {
     APPLICATIONINSIGHTS_CONNECTION_STRING      = local.key_vault_refs["app-insights-connection-string"]
