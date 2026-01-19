@@ -25,7 +25,8 @@ extends:
     environments:
       - name: Dev
       - name: Test
-        dependsOn: Dev
+        dependsOn:
+          - Dev
     serviceConnectionPrefix: Azure DevOps Pipelines - DevOps Template - Infrastructure
     storageAccountName: pinssttfstateukstemplate
     resourceGroupName: pins-rg-shared-terraform-uks
