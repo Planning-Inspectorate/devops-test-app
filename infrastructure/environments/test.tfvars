@@ -1,6 +1,6 @@
 apps_config = {
   app_service_plan_sku     = "P0v3"
-  node_environment         = "development"
+  node_environment         = "production"
   private_endpoint_enabled = false
 
   logging = {
@@ -22,15 +22,15 @@ auth_config = {
 common_config = {
   resource_group_name = "pins-rg-common-test-ukw-001"
   action_group_names = {
-    tech            = "pins-ag-odt-template-app-service-dev"
-    service_manager = "pins-ag-odt-template-app-service-dev"
+    tech            = "pins-ag-odt-template-app-service-test"
+    service_manager = "pins-ag-odt-template-app-service-test"
     iap             = "pins-ag-odt-iap-test"
     its             = "pins-ag-odt-its-test"
     info_sec        = "pins-ag-odt-info-sec-test"
   }
 }
 
-environment = "dev"
+environment = "test"
 
 front_door_config = {
   name        = "pins-fd-common-tooling"
