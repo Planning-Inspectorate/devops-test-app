@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Terraform Easy Cheatsheet</title>
+  <style>
+    body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; line-height: 1.7; color: #1f2937; margin: 24px; }
+    h1 { font-size: 34px; margin-bottom: 10px; font-weight: 700; }
+    h2 { font-size: 24px; margin-top: 26px; margin-bottom: 10px; font-weight: 700; }
+    p { margin: 4px 0 10px; }
+    pre { background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; overflow: auto; font-size: 14px; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+    .hint { color: #4b5563; font-size: 14px; }
+    .section { margin-bottom: 16px; break-inside: avoid; page-break-inside: avoid; }
+    ul { margin: 0 0 6px 18px; }
+
+    @media print {
+      body { margin: 0.75in; color: #000; }
+      h1, h2 { color: #000; }
+      pre { background: #fff; border-color: #d1d5db; }
+      .section { break-inside: avoid; page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Terraform Easy Cheatsheet</h1>
+  <p class="hint">Copy & paste sections into OneNote. Windows-friendly commands.</p>
+
+  <div class="section">
+    <h2>Install & Version</h2>
+    <pre><code>choco install terraform   # Windows (Chocolatey)
+terraform -version</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Azure Auth (common in this repo)</h2>
+    <pre><code>az login
+az account set --subscription "SUBSCRIPTION_NAME_OR_ID"</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Initialize & Validate</h2>
+    <pre><code>terraform init                 # download providers & modules
+terraform init -upgrade        # update locked provider versions
+terraform validate             # check configuration
+terraform fmt -recursive       # format files</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Plan & Apply</h2>
+    <pre><code>terraform plan                 # show changes
+terraform plan -out tfplan     # save plan
+terraform show tfplan          # view saved plan
+terraform apply                # apply interactively
+terraform apply tfplan         # apply saved plan
+terraform apply -auto-approve  # no prompt (use with care)</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Destroy</h2>
+    <pre><code>terraform destroy                    # destroy interactively
+terraform destroy -auto-approve      # no prompt (careful)</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Variables</h2>
+    <ul>
+      <li>Files: <code>*.tfvars</code> or <code>*.auto.tfvars</code></li>
+      <li>Env: <code>TF_VAR_name=value</code></li>
+    </ul>
+    <pre><code>terraform plan -var "env=test" -var-file="environments/test.tfvars"
+terraform apply -var-file="environments/test.tfvars"</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Outputs</h2>
+    <pre><code>terraform output               # show all
+terraform output db_conn_str   # show specific
+terraform output -json         # machine-readable</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Workspaces</h2>
+    <pre><code>terraform workspace list
+terraform workspace new test
+terraform workspace select test
+terraform workspace show
+terraform workspace delete test</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>State Operations</h2>
+    <pre><code>terraform state list
+terraform state show &lt;addr&gt;           # module.resource.id
+terraform state mv &lt;src&gt; &lt;dst&gt;        # rename/move in state
+terraform state rm &lt;addr&gt;             # remove from state (not destroy)
+terraform init -reconfigure           # re-read backend config
+terraform init -migrate-state         # move state to new backend</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Import Existing Resources</h2>
+    <pre><code># Legacy import (ensure resource exists in .tf)
+terraform import &lt;addr&gt; &lt;provider_resource_id&gt;
+
+# Modern: import blocks (Terraform 1.5+)
+# Add 'import { to = &lt;addr&gt; id = &lt;id&gt; }' to .tf, then:
+terraform plan
+terraform apply</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Targeting, Replace, Refresh-only</h2>
+    <pre><code>terraform plan -target=&lt;addr&gt;            # limit scope (use sparingly)
+terraform apply -replace=&lt;addr&gt;          # force recreation
+terraform plan -refresh-only              # refresh state only
+terraform apply -refresh-only             # update state without changes</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Modules & Providers</h2>
+    <pre><code>terraform init -upgrade            # update modules/providers
+terraform providers                # list used providers
+terraform providers schema -json   # provider schema (if supported)</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Graph & Console</h2>
+    <pre><code>terraform graph | dot -Tpng -o graph.png    # requires Graphviz
+terraform console                            # evaluate expressions</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Logs & Debug</h2>
+    <pre><code>$env:TF_LOG = "INFO"          # DEBUG, TRACE for more
+$env:TF_LOG_PATH = "tf.log"   # write logs to file
+terraform show -json tfplan    # JSON plan output</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Terraform Cloud/Enterprise</h2>
+    <pre><code>terraform login                 # set credentials for app.terraform.io
+# To switch backends:
+terraform init -reconfigure
+terraform init -migrate-state</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Common File Tips</h2>
+    <ul>
+      <li>Keep provider/version locks in <code>.terraform.lock.hcl</code>.</li>
+      <li>Use <code>locals</code> and <code>variables</code> for reusable values.</li>
+      <li>Store secrets in Key Vault/Secrets Manager, not plain <code>.tfvars</code>.</li>
+    </ul>
+  </div>
+</body>
+</html>
