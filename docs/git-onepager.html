@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Easy Git Cheatsheet</title>
+  <style>
+    body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; line-height: 1.7; color: #1f2937; margin: 24px; }
+    h1 { font-size: 34px; margin-bottom: 10px; font-weight: 700; }
+    h2 { font-size: 24px; margin-top: 26px; margin-bottom: 10px; font-weight: 700; }
+    p { margin: 4px 0 10px; }
+    pre { background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; overflow: auto; font-size: 14px; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+    .hint { color: #4b5563; font-size: 14px; }
+    .section { margin-bottom: 16px; break-inside: avoid; page-break-inside: avoid; }
+
+    /* Print-friendly adjustments */
+    @media print {
+      body { margin: 0.75in; color: #000; }
+      h1, h2 { color: #000; }
+      pre { background: #fff; border-color: #d1d5db; }
+      .section { break-inside: avoid; page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Easy Git Cheatsheet</h1>
+  <p class="hint">Copy & paste sections into OneNote. Windows-friendly commands.</p>
+
+  <div class="section">
+    <h2>Setup (once)</h2>
+    <pre><code>git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+git config --global init.defaultBranch main
+git config --global core.autocrlf true</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Start a new repo</h2>
+    <pre><code>mkdir my-project &amp;&amp; cd my-project
+git init
+echo "# My Project" &gt; README.md
+git add .
+git commit -m "Initial commit"</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Clone an existing repo</h2>
+    <pre><code>git clone https://github.com/owner/repo.git
+cd repo</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Daily workflow</h2>
+    <pre><code>git status
+git add .
+git commit -m "Clear, concise message"
+git push</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Branching</h2>
+    <pre><code>git switch -c feature/my-change      # create + switch
+git push -u origin feature/my-change # first push sets upstream
+git switch main                      # go back to main</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Sync with remote</h2>
+    <pre><code>git fetch
+git pull            # update current branch
+git pull --rebase   # optional: keep history linear</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Fix common mistakes</h2>
+    <pre><code>git restore --staged path/to/file    # unstage
+git restore path/to/file             # discard local change
+git commit --amend                   # edit last commit
+git revert &lt;commit&gt;                  # make a new undo commit
+git reset --soft HEAD~1              # undo commit, keep changes staged
+git reset --hard HEAD~1              # WARNING: discard changes</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Stash (save WIP)</h2>
+    <pre><code>git stash push -m "WIP"
+git stash list
+git stash pop</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>History quick views</h2>
+    <pre><code>git log --oneline --graph --decorate --all
+git show HEAD</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Tags (releases)</h2>
+    <pre><code>git tag -a v1.0.0 -m "Release 1.0.0"
+git push origin v1.0.0</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Rescue lost work</h2>
+    <pre><code>git reflog
+git checkout -b rescue &lt;reflog-commit&gt;</code></pre>
+  </div>
+</body>
+</html>
