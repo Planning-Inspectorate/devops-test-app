@@ -106,6 +106,39 @@ resource "azurerm_cdn_frontdoor_route" "api" {
   rule_set_ids           = [azurerm_cdn_frontdoor_rule_set.default.id]
 }
 
+resource "azurerm_cdn_frontdoor_firewall_policy" "default" {
+  name                = "${local.org}-fd-${local.service_name}-waf-${var.environment}"
+  resource_group_name = var.tooling_config.frontdoor_rg
+  sku_name            = "Premium_AFD"
+  mode                = "Prevention"
+
+  managed_rule {
+    managed_rule_set {
+      type    = "DefaultRuleSet"
+      version = "1.0"
+    }
+  }
+
+  tags = local.tags
+}
+
+resource "azurerm_cdn_frontdoor_security_policy" "default" {
+  name                     = "${local.org}-fd-${local.service_name}-sec-${var.environment}"
+  cdn_frontdoor_profile_id = data.azurerm_cdn_frontdoor_profile.web.id
+
+  security_policies {
+    firewall {
+      cdn_frontdoor_firewall_policy_id = azurerm_cdn_frontdoor_firewall_policy.default.id
+
+      association {
+        domain {
+          id = data.azurerm_cdn_frontdoor_endpoint.web.id
+        }
+        patterns_to_match = ["/*"]
+      }
+    }
+  }
+}
 resource "null_resource" "purge_all" {
   triggers = {
     endpoint_id = data.azurerm_cdn_frontdoor_endpoint.web.id
