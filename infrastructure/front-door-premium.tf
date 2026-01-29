@@ -30,6 +30,40 @@ resource "azurerm_cdn_frontdoor_origin" "web_app" {
   weight = 100
 }
 
+resource "azurerm_cdn_frontdoor_rule_set" "default" {
+  name = "${local.org}-fd-${local.service_name}-rules-${var.environment}"
+  cdn_frontdoor_profile_id = data.azurerm_cdn_frontdoor_profile.web.id
+}
+
+resource "azurerm_cdn_frontdoor_rule" "security_headers" {
+  name = "security-headers"
+  cdn_frontdoor_rule_set_id = azurerm_cdn_frontdoor_rule_set.default.id
+  order = 1
+
+  actions {
+    response_header_action {
+      header_action = "Overwrite"
+      header_name = "Strict-Transport-Security"
+      value = "max-age=63072000; includeSubDomains; preload"
+    }
+    response_header_action {
+      header_action = "Overwrite"
+      header_name = "X-Content-Type-Options"
+      value = "nosniff"
+    }
+    response_header_action {
+      header_action = "Overwrite"
+      header_name = "X-Frame-Options"
+      value = "DENY"
+    }
+    response_header_action {
+      header_action = "Overwrite"
+      header_name = "Referrer-Policy"
+      value = "no-referrer"
+    }
+  }
+}
+
 resource "azurerm_cdn_frontdoor_route" "web" {
   name = "${local.org}-fd-${local.service_name}-route-${var.environment}"
   cdn_frontdoor_endpoint_id = data.azurerm_cdn_frontdoor_endpoint.web.id
@@ -41,6 +75,7 @@ resource "azurerm_cdn_frontdoor_route" "web" {
   forwarding_protocol = "MatchRequest"
   link_to_default_domain = true
   cache_enabled = false
+  rule_set_ids = [azurerm_cdn_frontdoor_rule_set.default.id]
 }
 
 resource "null_resource" "purge_all" {
