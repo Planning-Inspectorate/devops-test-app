@@ -92,6 +92,20 @@ resource "azurerm_cdn_frontdoor_route" "assets" {
   rule_set_ids = [azurerm_cdn_frontdoor_rule_set.default.id]
 }
 
+resource "azurerm_cdn_frontdoor_route" "api" {
+  name = "${local.org}-fd-${local.service_name}-api-${var.environment}"
+  cdn_frontdoor_endpoint_id = data.azurerm_cdn_frontdoor_endpoint.web.id
+  cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.web.id
+
+  patterns_to_match = ["/api/*"]
+  supported_protocols = ["Https"]
+  https_redirect_enabled = true
+  forwarding_protocol = "MatchRequest"
+  link_to_default_domain = true
+  cache_enabled = false
+  rule_set_ids = [azurerm_cdn_frontdoor_rule_set.default.id]
+}
+
 resource "null_resource" "purge_all" {
   triggers = {
     endpoint_id = data.azurerm_cdn_frontdoor_endpoint.web.id
