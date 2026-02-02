@@ -1,5 +1,5 @@
 resource "azurerm_cdn_frontdoor_origin_group" "web" {
-  name                     = "${local.org}-fd-${local.service_name}-web-${var.environment}"
+  name                     = "${local.org}-fd-${local.service_name}-${var.environment}"
   cdn_frontdoor_profile_id = data.azurerm_cdn_frontdoor_profile.web.id
   session_affinity_enabled = true
 
@@ -18,7 +18,7 @@ resource "azurerm_cdn_frontdoor_origin_group" "web" {
 }
 
 resource "azurerm_cdn_frontdoor_origin" "web_app" {
-  name                          = "${local.org}-fd-${local.service_name}-origin-${var.environment}"
+  name                          = "${local.org}-fd-${local.service_name}-${var.environment}"
   cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.web.id
   enabled                       = true
 
@@ -31,7 +31,7 @@ resource "azurerm_cdn_frontdoor_origin" "web_app" {
 }
 
 resource "azurerm_cdn_frontdoor_rule_set" "default" {
-  name                     = "${local.org}-fd-${local.service_name}-rules-${var.environment}"
+  name                     = "${local.org}-fd-${local.service_name}-${var.environment}"
   cdn_frontdoor_profile_id = data.azurerm_cdn_frontdoor_profile.web.id
 }
 
@@ -65,7 +65,7 @@ resource "azurerm_cdn_frontdoor_rule" "security_headers" {
 }
 
 resource "azurerm_cdn_frontdoor_route" "web" {
-  name                          = "${local.org}-fd-${local.service_name}-route-${var.environment}"
+  name                          = "${local.org}-fd-${local.service_name}-${var.environment}-web"
   cdn_frontdoor_endpoint_id     = data.azurerm_cdn_frontdoor_endpoint.web.id
   cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.web.id
 
@@ -79,7 +79,7 @@ resource "azurerm_cdn_frontdoor_route" "web" {
 }
 
 resource "azurerm_cdn_frontdoor_route" "assets" {
-  name                          = "${local.org}-fd-${local.service_name}-assets-${var.environment}"
+  name                          = "${local.org}-fd-${local.service_name}-${var.environment}-assets"
   cdn_frontdoor_endpoint_id     = data.azurerm_cdn_frontdoor_endpoint.web.id
   cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.web.id
 
@@ -93,7 +93,7 @@ resource "azurerm_cdn_frontdoor_route" "assets" {
 }
 
 resource "azurerm_cdn_frontdoor_route" "api" {
-  name                          = "${local.org}-fd-${local.service_name}-api-${var.environment}"
+  name                          = "${local.org}-fd-${local.service_name}-${var.environment}-api"
   cdn_frontdoor_endpoint_id     = data.azurerm_cdn_frontdoor_endpoint.web.id
   cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.web.id
 
@@ -107,7 +107,7 @@ resource "azurerm_cdn_frontdoor_route" "api" {
 }
 
 resource "azurerm_cdn_frontdoor_firewall_policy" "default" {
-  name                = "${local.org}-fd-${local.service_name}-waf-${var.environment}"
+  name                = "${local.org}-fd-${local.service_name}-${var.environment}"
   resource_group_name = var.tooling_config.frontdoor_rg
   sku_name            = "Premium_AFD"
   mode                = "Prevention"
@@ -123,7 +123,7 @@ resource "azurerm_cdn_frontdoor_firewall_policy" "default" {
 }
 
 resource "azurerm_cdn_frontdoor_security_policy" "default" {
-  name                     = "${local.org}-fd-${local.service_name}-sec-${var.environment}"
+  name                     = "${local.org}-fd-${local.service_name}-${var.environment}"
   cdn_frontdoor_profile_id = data.azurerm_cdn_frontdoor_profile.web.id
 
   security_policies {
