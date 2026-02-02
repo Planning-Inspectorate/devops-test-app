@@ -46,13 +46,11 @@ resource "azurerm_monitor_metric_alert" "log_cap_alert" {
   #dynamic_criteria uses historical data and machine learning to set thresholds automatically.
   #The alert triggers when the metric deviates from its normal pattern (anomaly detection).
   dynamic_criteria {
-    metric_namespace         = "Microsoft.OperationalInsights/workspaces"
-    metric_name              = "Daily Cap reached"
-    aggregation              = "Total"
-    operator                 = "GreaterThanOrEqual"
-    alert_sensitivity        = "Medium" # Low, Medium, High
-    evaluation_periods       = 4
-    failing_periods_to_alert = 4 # Optional: can specify a date to ignore older data
+    metric_namespace  = "Microsoft.OperationalInsights/workspaces"
+    metric_name       = "Daily Cap reached"
+    aggregation       = "Total"
+    operator          = "GreaterThanOrEqual"
+    alert_sensitivity = "Medium" # Low, Medium, High
   }
 
   action {
