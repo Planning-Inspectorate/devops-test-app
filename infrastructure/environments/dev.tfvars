@@ -9,7 +9,7 @@ apps_config = {
   }
 }
 
-alerts_enabled = false
+alerts_enabled = true
 
 auth_config = {
   auth_enabled           = true
