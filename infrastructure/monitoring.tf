@@ -49,7 +49,7 @@ resource "azurerm_monitor_metric_alert" "log_cap_alert" {
     metric_namespace  = "Microsoft.OperationalInsights/workspaces"
     metric_name       = "Daily Cap reached"
     aggregation       = "Total"
-    operator          = "GreaterThanOrEqual"
+    operator          = "GreaterThan"
     alert_sensitivity = "Medium" # Low, Medium, High
   }
 
