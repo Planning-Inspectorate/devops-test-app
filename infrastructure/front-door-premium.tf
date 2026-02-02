@@ -6,7 +6,7 @@ resource "azurerm_cdn_frontdoor_origin_group" "web" {
   health_probe {
     interval_in_seconds = 240
     path                = "/"
-    protocol            = "UDP"
+    protocol            = "Https"
     request_type        = "HEAD"
   }
 
