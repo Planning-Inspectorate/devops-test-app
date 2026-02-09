@@ -24,9 +24,9 @@ provider "azurerm" {
 }
 
 provider "azurerm" {
-  resource_group_name = var.tooling_config.frontdoor_rg
-  alias               = "tooling"
-  subscription_id     = var.tooling_config.subscription_id
+
+  alias           = "tooling"
+  subscription_id = var.tooling_config.subscription_id
 
   features {}
 }
