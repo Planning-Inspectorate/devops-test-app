@@ -5,13 +5,13 @@ resource "azurerm_cdn_frontdoor_origin_group" "web" {
 
   health_probe {
     interval_in_seconds = 240
-    path = "/"
-    protocol = "UDP"
-    request_type = "HEAD"
+    path                = "/"
+    protocol            = "UDP"
+    request_type        = "HEAD"
   }
 
   load_balancing {
-    additional_latency_in_milliseconds  = 0
+    additional_latency_in_milliseconds = 0
     sample_size                        = 16
     successful_samples_required        = 3
   }
