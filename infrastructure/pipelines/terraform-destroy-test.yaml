@@ -10,14 +10,9 @@ resources:
       name: Planning-Inspectorate/common-pipeline-templates
       ref: refs/tags/release/3.24.2
 
-extends:
-  template: pipelines/terraform_plan_apply.yml@templates
-  parameters:
-    environments:
-      - name: Test
-    serviceConnectionPrefix: Azure DevOps Pipelines - DevOps Template - Infrastructure
-    storageAccountName: pinssttfstateukstemplate
-    resourceGroupName: pins-rg-shared-terraform-uks
-    containerPrefix: terraform-state-devops-template-
-    workingDirectory: $(Build.Repository.LocalPath)/infrastructure
-    environmentVarFilePath: $(Build.Repository.LocalPath)/infrastructure/environments
+jobs:
+  - job: Destroy
+    displayName: 'Destroy Infrastructure'
+    steps:
+
+      - script:  |
