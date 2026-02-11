@@ -22,12 +22,13 @@ resource "azurerm_cdn_frontdoor_origin" "web_app" {
   cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.web.id
   enabled                       = true
 
-  host_name          = module.template_app_web.default_site_hostname
-  origin_host_header = module.template_app_web.default_site_hostname
-  http_port          = 80
-  https_port         = 443
-  priority           = 1
-  weight             = 100
+  host_name                      = module.template_app_web.default_site_hostname
+  origin_host_header             = module.template_app_web.default_site_hostname
+  http_port                      = 80
+  https_port                     = 443
+  priority                       = 1
+  weight                         = 100
+  certificate_name_check_enabled = true
 }
 
 resource "azurerm_cdn_frontdoor_route" "web" {
