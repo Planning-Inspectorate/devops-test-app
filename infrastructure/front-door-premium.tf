@@ -16,3 +16,29 @@ resource "azurerm_cdn_frontdoor_origin_group" "web" {
     successful_samples_required        = 3
   }
 }
+
+resource "azurerm_cdn_frontdoor_origin" "web_app" {
+  name                          = "${local.org}-fd-${local.service_name}-origin-${var.environment}"
+  cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.web.id
+  enabled                       = true
+
+  host_name          = module.template_app_web.default_hostname
+  origin_host_header = module.template_app_web.default_hostname
+  http_port          = 80
+  https_port         = 443
+  priority           = 1
+  weight             = 100
+}
+
+resource "azurerm_cdn_frontdoor_route" "web" {
+  name                          = "${local.org}-fd-${local.service_name}-web-${var.environment}"
+  cdn_frontdoor_endpoint_id     = data.azurerm_cdn_frontdoor_endpoint.web.id
+  cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.web.id
+
+  patterns_to_match      = ["/*"]
+  supported_protocols    = ["Http", "Https"]
+  https_redirect_enabled = true
+  forwarding_protocol    = "MatchRequest"
+  link_to_default_domain = true
+  cache_enabled          = false
+}
