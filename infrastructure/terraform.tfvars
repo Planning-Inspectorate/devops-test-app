@@ -8,7 +8,7 @@ tooling_config = {
   network_rg              = "pins-rg-shared-tooling-uks"
   subscription_id         = "edb1ff78-90da-4901-a497-7e79f966f8e2"
   frontdoor_name          = "pins-fd-common-tooling"
-  frontdoor_rg            = "pins-rg-common-tooling"
+  frontdoor_rg            = "pins-rg-shared-tooling-uks"
   frontdoor_ep_name       = "pins-fde-template"
 }
 
