@@ -4,7 +4,7 @@ resource "azurerm_monitor_action_group" "all_action_groups" {
   for_each = local.all_action_groups
 
   name                = "pins-ag-odt-${each.value}-${var.environment}"
-  resource_group_name = "pins-rg-common-dev-ukw-001"
+  resource_group_name = var.common_config.resource_group_name
   short_name          = "CoreServices" # 1-12 chars only
   tags                = local.tags
 
