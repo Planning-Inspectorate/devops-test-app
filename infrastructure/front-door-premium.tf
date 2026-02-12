@@ -5,7 +5,7 @@ resource "azurerm_cdn_frontdoor_origin_group" "web" {
 
   health_probe {
     interval_in_seconds = 240
-    path                = var.health_check_path
+    path                = "/"
     protocol            = "Https"
     request_type        = "HEAD"
   }
@@ -18,16 +18,17 @@ resource "azurerm_cdn_frontdoor_origin_group" "web" {
 }
 
 resource "azurerm_cdn_frontdoor_origin" "web_app" {
-  name                          = "${local.org}-fd-${local.service_name}-${var.environment}"
+  name                          = "${local.org}-fd-${local.service_name}-origin-${var.environment}"
   cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.web.id
   enabled                       = true
 
-  host_name          = var.web_app_domain
-  origin_host_header = var.web_app_domain
-  http_port          = 80
-  https_port         = 443
-  priority           = 1
-  weight             = 100
+  host_name                      = module.template_app_web.default_site_hostname
+  origin_host_header             = module.template_app_web.default_site_hostname
+  http_port                      = 80
+  https_port                     = 443
+  priority                       = 1
+  weight                         = 100
+  certificate_name_check_enabled = true
 }
 
 resource "azurerm_cdn_frontdoor_rule_set" "default" {
@@ -65,45 +66,43 @@ resource "azurerm_cdn_frontdoor_rule" "security_headers" {
 }
 
 resource "azurerm_cdn_frontdoor_route" "web" {
-  name                          = "${local.org}-fd-${local.service_name}-${var.environment}-web"
+  name                          = "${local.org}-fd-${local.service_name}-web-${var.environment}"
   cdn_frontdoor_endpoint_id     = data.azurerm_cdn_frontdoor_endpoint.web.id
   cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.web.id
-
-  patterns_to_match      = ["/*"]
-  supported_protocols    = ["Https"]
-  https_redirect_enabled = true
-  forwarding_protocol    = "MatchRequest"
-  link_to_default_domain = true
-  cache_enabled          = false
-  rule_set_ids           = [azurerm_cdn_frontdoor_rule_set.default.id]
+  cdn_frontdoor_origin_ids      = [azurerm_cdn_frontdoor_origin.web_app.id]
+  patterns_to_match             = ["/*"]
+  supported_protocols           = ["Http", "Https"]
+  https_redirect_enabled        = true
+  forwarding_protocol           = "MatchRequest"
+  link_to_default_domain        = true
+  rule_set_ids                  = [azurerm_cdn_frontdoor_rule_set.default.id]
 }
 
 resource "azurerm_cdn_frontdoor_route" "assets" {
-  name                          = "${local.org}-fd-${local.service_name}-${var.environment}-assets"
+  name                          = "${local.org}-fd-${local.service_name}-assets-${var.environment}"
   cdn_frontdoor_endpoint_id     = data.azurerm_cdn_frontdoor_endpoint.web.id
   cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.web.id
-
-  patterns_to_match      = ["/assets/*"]
-  supported_protocols    = ["Https"]
-  https_redirect_enabled = true
-  forwarding_protocol    = "MatchRequest"
-  link_to_default_domain = true
-  cache_enabled          = true
-  rule_set_ids           = [azurerm_cdn_frontdoor_rule_set.default.id]
+  cdn_frontdoor_origin_ids      = [azurerm_cdn_frontdoor_origin.web_app.id]
+  patterns_to_match             = ["/assets/*"]
+  supported_protocols           = ["Http", "Https"]
+  https_redirect_enabled        = true
+  forwarding_protocol           = "MatchRequest"
+  link_to_default_domain        = true
+  cache_enabled                 = true
+  rule_set_ids                  = [azurerm_cdn_frontdoor_rule_set.default.id]
 }
 
 resource "azurerm_cdn_frontdoor_route" "api" {
-  name                          = "${local.org}-fd-${local.service_name}-${var.environment}-api"
+  name                          = "${local.org}-fd-${local.service_name}-api-${var.environment}"
   cdn_frontdoor_endpoint_id     = data.azurerm_cdn_frontdoor_endpoint.web.id
   cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.web.id
-
-  patterns_to_match      = ["/api/*"]
-  supported_protocols    = ["Https"]
-  https_redirect_enabled = true
-  forwarding_protocol    = "MatchRequest"
-  link_to_default_domain = true
-  cache_enabled          = false
-  rule_set_ids           = [azurerm_cdn_frontdoor_rule_set.default.id]
+  cdn_frontdoor_origin_ids      = [azurerm_cdn_frontdoor_origin.web_app.id]
+  patterns_to_match             = ["/api/*"]
+  supported_protocols           = ["Http", "Https"]
+  https_redirect_enabled        = true
+  forwarding_protocol           = "MatchRequest"
+  link_to_default_domain        = true
+  rule_set_ids                  = [azurerm_cdn_frontdoor_rule_set.default.id]
 }
 
 resource "azurerm_cdn_frontdoor_firewall_policy" "default" {
@@ -137,14 +136,5 @@ resource "azurerm_cdn_frontdoor_security_policy" "default" {
         patterns_to_match = ["/*"]
       }
     }
-  }
-}
-resource "null_resource" "purge_all" {
-  triggers = {
-    endpoint_id = data.azurerm_cdn_frontdoor_endpoint.web.id
-  }
-
-  provisioner "local-exec" {
-    command = "az afd endpoint purge --content-paths '/*' --profile-name ${data.azurerm_cdn_frontdoor_profile.web.name} --endpoint-name ${data.azurerm_cdn_frontdoor_endpoint.web.name} --resource-group ${data.azurerm_cdn_frontdoor_profile.web.resource_group_name}"
   }
 }
