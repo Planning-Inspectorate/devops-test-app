@@ -22,11 +22,11 @@ auth_config = {
 common_config = {
   resource_group_name = "pins-rg-common-test-ukw-001"
   action_group_names = {
-    tech            = "pins-ag-odt-template-app-service-test"
-    service_manager = "pins-ag-odt-template-app-service-test"
-    iap             = "pins-ag-odt-iap-test"
-    its             = "pins-ag-odt-its-test"
-    info_sec        = "pins-ag-odt-info-sec-test"
+    tech            = "test-asg-acr"
+    service_manager = "test-asg-acr"
+    iap             = "test-asg-acr"
+    its             = "test-asg-acr"
+    info_sec        = "test-asg-acr"
   }
 }
 
