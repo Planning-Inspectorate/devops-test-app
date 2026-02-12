@@ -1,5 +1,5 @@
 resource "azurerm_cdn_frontdoor_origin_group" "web" {
-  name                     = "${local.org}-sec-${local.service_name}-${var.environment}"
+  name                     = "${local.org}-fd-${local.service_name}-web-${var.environment}"
   cdn_frontdoor_profile_id = data.azurerm_cdn_frontdoor_profile.web.id
   session_affinity_enabled = true
 
@@ -18,7 +18,7 @@ resource "azurerm_cdn_frontdoor_origin_group" "web" {
 }
 
 resource "azurerm_cdn_frontdoor_origin" "web_app" {
-  name                          = "${local.org}-sec-${local.service_name}-origin-${var.environment}"
+  name                          = "${local.org}-fd-${local.service_name}-origin-${var.environment}"
   cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.web.id
   enabled                       = true
 
@@ -32,7 +32,7 @@ resource "azurerm_cdn_frontdoor_origin" "web_app" {
 }
 
 resource "azurerm_cdn_frontdoor_route" "web" {
-  name                          = "${local.org}-sec-${local.service_name}-web-${var.environment}"
+  name                          = "${local.org}-fd-${local.service_name}-web-${var.environment}"
   cdn_frontdoor_endpoint_id     = data.azurerm_cdn_frontdoor_endpoint.web.id
   cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.web.id
   cdn_frontdoor_origin_ids      = [azurerm_cdn_frontdoor_origin.web_app.id]
