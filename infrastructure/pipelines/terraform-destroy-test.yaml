@@ -1,0 +1,50 @@
+trigger: none
+
+pr: none
+
+pool:
+  name: pins-template-test
+
+variables:
+  azureServiceConnection: Azure DevOps Pipelines - DevOps Template - Infrastructure TEST
+  storageAccountName: pinssttfstateukstemplate
+  resourceGroupName: pins-rg-shared-terraform-uks
+  containerName: terraform-state-devops-template-test
+
+resources:
+  repositories:
+    - repository: templates
+      type: github
+      endpoint: Planning-Inspectorate
+      name: Planning-Inspectorate/common-pipeline-templates
+      ref: refs/tags/release/3.24.2
+
+jobs:
+  - job: DestroyTestInfrastructure
+    displayName: 'Destroy Test Environment'
+    steps:
+      - checkout: self
+
+      - task: AzureCLI@2
+        displayName: 'Terraform Init'
+        inputs:
+          azureSubscription: $(azureServiceConnection)
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            cd $(Build.Repository.LocalPath)/infrastructure
+            terraform init \
+              -backend-config="storage_account_name=$(storageAccountName)" \
+              -backend-config="resource_group_name=$(resourceGroupName)" \
+              -backend-config="container_name=$(containerName)" \
+              -backend-config="key=test.tfstate"
+
+      - task: AzureCLI@2
+        displayName: 'Terraform Destroy'
+        inputs:
+          azureSubscription: $(azureServiceConnection)
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            cd $(Build.Repository.LocalPath)/infrastructure
+            terraform destroy -auto-approve -var-file="environments/test.tfvars"

@@ -1,7 +1,5 @@
 data "azurerm_client_config" "current" {}
 
-# data "azurerm_subscription" "current" {}
-
 data "azurerm_virtual_network" "tooling" {
   name                = var.tooling_config.network_name
   resource_group_name = var.tooling_config.network_rg
@@ -16,12 +14,14 @@ data "azurerm_monitor_action_group" "common" {
   name                = each.value
 }
 
+# tflint-ignore: terraform_unused_declarations
 data "azurerm_cdn_frontdoor_profile" "web" {
   name                = var.tooling_config.frontdoor_name
   resource_group_name = var.tooling_config.frontdoor_rg
   provider            = azurerm.front_door
-}
 
+}
+# tflint-ignore: terraform_unused_declarations
 data "azurerm_cdn_frontdoor_endpoint" "web" {
   name                = var.tooling_config.frontdoor_ep_name
   profile_name        = var.tooling_config.frontdoor_name
