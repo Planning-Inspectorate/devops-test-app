@@ -54,9 +54,9 @@ sql_config = {
 }
 
 vnet_config = {
-  address_space             = "10.18.8.0/24"
-  main_subnet_address_space = "10.18.8.0/25"
-  apps_subnet_address_space = "10.18.8.128/25"
+  address_space             = "10.18.8.0/21"
+  main_subnet_address_space = "10.18.8.0/24"
+  apps_subnet_address_space = "10.18.9.0/24"
 }
 
 web_app_domain = "template-service-test.planninginspectorate.gov.uk"
