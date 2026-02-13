@@ -2,6 +2,7 @@ resource "azurerm_cdn_frontdoor_origin_group" "web" {
   name                     = "${local.org}-fd-${local.service_name}-web-${var.environment}"
   cdn_frontdoor_profile_id = data.azurerm_cdn_frontdoor_profile.web.id
   session_affinity_enabled = true
+  provider                 = azurerm.front_door
 
   health_probe {
     interval_in_seconds = 240
