@@ -59,8 +59,5 @@ vnet_config = {
   apps_subnet_address_space = "10.18.5.0/24"
 }
 
-web_app_domain = "template-service-test.planninginspectorate.gov.uk"
-# Tooling config for shared resources (Front Door, etc.)
-tooling_config = {
 
 }

@@ -19,6 +19,7 @@ resource "azurerm_cdn_frontdoor_origin_group" "web" {
 }
 
 resource "azurerm_cdn_frontdoor_origin" "web_app" {
+  provider = azurerm.front_door
   name                          = "${local.org}-fd-${local.service_name}-origin-${var.environment}"
   cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.web.id
   enabled                       = true
