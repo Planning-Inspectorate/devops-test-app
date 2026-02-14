@@ -60,4 +60,3 @@ vnet_config = {
 }
 
 
-}
