@@ -100,19 +100,20 @@ nvm install 20
 nvm alias default 22
 nvm use default
 
-# Now safe to set PATH to default Node bin
-DEFAULT_NODE=$(nvm version default)
-export PATH="$NVM_DIR/versions/node/$DEFAULT_NODE/bin:$PATH"
-
-# Persist for all users
-sudo tee /etc/profile.d/nvm.sh > /dev/null <<"EOT"
-export NVM_DIR="/usr/local/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-DEFAULT_NODE=$(nvm version default 2>/dev/null)
-if [ "$DEFAULT_NODE" != "N/A" ]; then
-  export PATH="$NVM_DIR/versions/node/$DEFAULT_NODE/bin:$PATH"
-fi
-EOT
+# Create symlinks to make Node.js 22 available globally without any pipeline setup
+# Lines 105-116 are Co-pilot code used for testing purposes
+# DEFAULT_NODE_VERSION=$(find /usr/local/nvm/versions/node -name "v22.*" -type d | head -1)
+# if [ -n "$DEFAULT_NODE_VERSION" ] && [ -d "$DEFAULT_NODE_VERSION/bin" ]; then
+#   # Create symlinks in /usr/local/bin (already in PATH)
+#   sudo ln -sf "$DEFAULT_NODE_VERSION/bin/node" /usr/local/bin/node
+#   sudo ln -sf "$DEFAULT_NODE_VERSION/bin/npm" /usr/local/bin/npm
+#   sudo ln -sf "$DEFAULT_NODE_VERSION/bin/npx" /usr/local/bin/npx
+  
+#   echo "✅ Created Node.js 22 symlinks in /usr/local/bin/"
+#   echo "✅ Node.js now available globally without pipeline setup"
+# else
+#   echo "❌ Node.js 22 not found, skipping symlink creation"
+# fi
 
 # Azure CLI
 curl -sL https://aka.ms/InstallAzureCLIDeb | bash
