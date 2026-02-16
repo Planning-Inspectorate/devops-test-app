@@ -60,5 +60,3 @@ vnet_config = {
 }
 
 web_app_domain = "template-service-dev.planninginspectorate.gov.uk"
-
-frontdoor_rg = "pins-rg-shared-tooling-uks"
