@@ -16,12 +16,13 @@ resource "azurerm_cdn_frontdoor_origin_group" "web" {
     sample_size                        = 16
     successful_samples_required        = 3
   }
-}
+git}
 
 resource "azurerm_cdn_frontdoor_origin" "web_app" {
   name                          = "${local.org}-fd-${local.service_name}-origin-${var.environment}"
   cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.web.id
   enabled                       = true
+  provider                      = azurerm.front_door
 
   host_name                      = module.template_app_web.default_site_hostname
   origin_host_header             = module.template_app_web.default_site_hostname
