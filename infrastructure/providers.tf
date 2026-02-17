@@ -26,7 +26,7 @@ provider "azurerm" {
 # Provider for cross-subscription access to 'pins-rg-common-tooling'
 provider "azurerm" {
   alias           = "common"
-  subscription_id = "pins-rg-common-test-ukw-001"
+  subscription_id = "76cf28c6-6fda-42f1-bcd9-6d7dbed704ef"
   features {}
 }
 
