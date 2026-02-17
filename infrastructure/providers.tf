@@ -27,7 +27,7 @@ provider "azurerm" {
 provider "azurerm" {
   alias           = "common"
   subscription_id = "REPLACE_WITH_ACTUAL_SUBSCRIPTION_ID" # TODO: Update before merge
-  features        = {}
+  features {}
 }
 
 provider "azurerm" {
