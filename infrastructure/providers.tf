@@ -23,6 +23,13 @@ provider "azurerm" {
   features {}
 }
 
+# Provider for cross-subscription access to 'pins-rg-common-tooling'
+provider "azurerm" {
+  alias           = "common"
+  subscription_id = "REPLACE_WITH_ACTUAL_SUBSCRIPTION_ID" # TODO: Update before merge
+  features        = {}
+}
+
 provider "azurerm" {
 
   alias           = "tooling"

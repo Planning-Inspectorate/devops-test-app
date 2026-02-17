@@ -13,6 +13,7 @@ resource "azurerm_monitor_action_group" "all_action_groups" {
   resource_group_name = var.common_config.resource_group_name
   short_name          = "CoreServices" # 1-12 chars only
   tags                = local.tags
+  provider            = azurerm.common
 
   # we set emails in the action groups in Azure Portal - to avoid needing to manage
   # emails in terraform
