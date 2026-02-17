@@ -23,7 +23,7 @@ resource "azurerm_cdn_frontdoor_origin" "web_app" {
   cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.web.id
   enabled                       = true
 
-  provider                      = azurerm.front_door
+  provider = azurerm.front_door
 
   host_name                      = module.template_app_web.default_site_hostname
   origin_host_header             = module.template_app_web.default_site_hostname
