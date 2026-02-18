@@ -18,6 +18,11 @@ resource "azurerm_cdn_frontdoor_origin_group" "web" {
   }
 }
 
+import {
+  id = "/subscriptions/edb1ff78-90da-4901-a497-7e79f966f8e2/resourceGroups/pins-rg-common-tooling/providers/Microsoft.Cdn/profiles/pins-fd-common-tooling/originGroups/pins-fd-template-web-test/origins/pins-fd-template-origin-test"
+  to = azurerm_cdn_frontdoor_origin.web_app
+}
+
 resource "azurerm_cdn_frontdoor_origin" "web_app" {
   name                          = "${local.org}-fd-${local.service_name}-origin-${var.environment}"
   cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.web.id
