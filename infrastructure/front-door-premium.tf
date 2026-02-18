@@ -39,14 +39,12 @@ resource "azurerm_cdn_frontdoor_origin" "web_app" {
   certificate_name_check_enabled = true
 }
 
-resource "azurerm_cdn_frontdoor_route" "web" {
-  name                          = "${local.org}-fd-${local.service_name}-web-${var.environment}"
-  cdn_frontdoor_endpoint_id     = data.azurerm_cdn_frontdoor_endpoint.web.id
-  cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.web.id
-  cdn_frontdoor_origin_ids      = [azurerm_cdn_frontdoor_origin.web_app.id]
+  provider                      = azurerm.front_door
   patterns_to_match             = ["/*"]
-  supported_protocols           = ["Http", "Https"]
+  supported_protocols         git add front-door-premium.tf
+= ["Http", "Https"]
   https_redirect_enabled        = true
   forwarding_protocol           = "MatchRequest"
   link_to_default_domain        = true
 }
+
