@@ -49,6 +49,4 @@ resource "azurerm_cdn_frontdoor_route" "web" {
   https_redirect_enabled        = true
   forwarding_protocol           = "MatchRequest"
   link_to_default_domain        = true
-
-  provider = azurerm.front_door
 }
