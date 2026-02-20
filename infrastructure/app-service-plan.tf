@@ -7,6 +7,10 @@ resource "azurerm_service_plan" "apps" {
 
   os_type  = "Linux"
   sku_name = var.apps_config.app_service_plan_sku
+  timeouts {
+    create = "60m"
+    delete = "2h"
+  }
 
   tags = local.tags
 }
