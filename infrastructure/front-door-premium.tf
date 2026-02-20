@@ -36,7 +36,7 @@ resource "azurerm_cdn_frontdoor_origin" "web_app" {
   https_port                     = 443
   priority                       = 1
   weight                         = 100
-  certificate_name_check_enabled = true 
+  certificate_name_check_enabled = true
 }
 
 resource "azurerm_cdn_frontdoor_route" "web" {
@@ -50,6 +50,19 @@ resource "azurerm_cdn_frontdoor_route" "web" {
   forwarding_protocol           = "MatchRequest"
   link_to_default_domain        = true
 
+  provider = azurerm.front_door
+
+}
+
+
+resource "azurerm_cdn_frontdoor_custom_domain" "web" {
+  name                     = "${local.org}-fd-${local.service_name}-web-${var.environment}"
+  cdn_frontdoor_profile_id = data.azurerm_cdn_frontdoor_profile.web.id
+  host_name                = var.web_app_domain
+
+  tls {
+    certificate_type = "ManagedCertificate"
+  }
   provider = azurerm.front_door
 }
 
