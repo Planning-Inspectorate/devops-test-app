@@ -72,4 +72,35 @@ resource "azurerm_cdn_frontdoor_custom_domain_association" "web" {
   provider                       = azurerm.front_door
 }
 
+resource "azurerm_cdn_frontdoor_firewall_policy" "web" {
+  name                              = "${local.org}-fd-${local.service_name}-waf-${var.environment}"
+  resource_group_name               = var.tooling_config.frontdoor_rg
+  sku_name                          = data.azurerm_cdn_frontdoor_profile.web.id
+  enabled                           = true
+  mode                              = "Prevention"
+  redirect_url                      = "https://www.contoso.com"
+  custom_block_response_status_code = 403
+  custom_block_response_body        = "PGh0bWw+CjxoZWFkZXI+PHRpdGxlPkhlbGxvPC90aXRsZT48L2hlYWRlcj4KPGJvZHk+CkhlbGxvIHdvcmxkCjwvYm9keT4KPC9odG1sPg=="
 
+  provider = azurerm.front_door
+}
+
+resource "azurerm_cdn_frontdoor_security_policy" "web" {
+  name                     = "${local.org}-fd-${local.service_name}-security-policy-${var.environment}"
+  cdn_frontdoor_profile_id = data.azurerm_cdn_frontdoor_profile.web.id
+
+  security_policies {
+    firewall {
+      cdn_frontdoor_firewall_policy_id = azurerm_cdn_frontdoor_firewall_policy.web.id
+
+      association {
+        domain {
+          cdn_frontdoor_domain_id = azurerm_cdn_frontdoor_custom_domain.web.id
+        }
+        patterns_to_match = ["/*"]
+      }
+    }
+  }
+
+  provider = azurerm.front_door
+}
