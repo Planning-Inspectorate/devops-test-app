@@ -43,7 +43,7 @@ resource "azurerm_cdn_frontdoor_route" "web" {
   supported_protocols           = ["Http", "Https"]
   https_redirect_enabled        = true
   forwarding_protocol           = "MatchRequest"
-  link_to_default_domain        = true
+  link_to_default_domain        = false
 
   provider = azurerm.front_door
 
@@ -67,21 +67,42 @@ resource "azurerm_cdn_frontdoor_custom_domain_association" "web" {
   provider                       = azurerm.front_door
 }
 
+
 resource "azurerm_cdn_frontdoor_firewall_policy" "web" {
-  name                              = "${local.org}-fd-${local.service_name}-waf-${var.environment}"
+  name                              = replace("${local.org}-fd-${local.service_name}-waf-${var.environment}", "-", "")
   resource_group_name               = var.tooling_config.frontdoor_rg
-  sku_name                          = data.azurerm_cdn_frontdoor_profile.web.id
-  enabled                           = true
+  sku_name                          = data.azurerm_cdn_frontdoor_profile.web.sku_name
+  enabled                           = false
   mode                              = "Prevention"
-  redirect_url                      = "https://www.contoso.com"
   custom_block_response_status_code = 403
-  custom_block_response_body        = "PGh0bWw+CjxoZWFkZXI+PHRpdGxlPkhlbGxvPC90aXRsZT48L2hlYWRlcj4KPGJvZHk+CkhlbGxvIHdvcmxkCjwvYm9keT4KPC9odG1sPg=="
+
+  custom_rule {
+    name     = "BlockLocalIPs"
+    enabled  = false
+    priority = 1
+    type     = "MatchRule"
+    action   = "Block"
+
+    match_condition {
+      match_variable     = "RemoteAddr"
+      operator           = "IPMatch"
+      negation_condition = false
+      match_values       = ["10.0.1.0/24", "10.0.0.0/24"]
+    }
+  }
+
+  managed_rule {
+    type    = "DefaultRuleSet"
+    version = "1.0"
+    action  = "Log"
+  }
 
   provider = azurerm.front_door
 }
 
+
 resource "azurerm_cdn_frontdoor_security_policy" "web" {
-  name                     = "${local.org}-fd-${local.service_name}-security-policy-${var.environment}"
+  name                     = replace("${local.org}-fd-${local.service_name}-security-policy-${var.environment}", "-", "")
   cdn_frontdoor_profile_id = data.azurerm_cdn_frontdoor_profile.web.id
 
   security_policies {
