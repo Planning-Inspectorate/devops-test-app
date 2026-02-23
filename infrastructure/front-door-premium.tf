@@ -29,21 +29,21 @@ resource "azurerm_cdn_frontdoor_origin" "web" {
   priority                       = 1
   weight                         = 1000
   certificate_name_check_enabled = true
-  provider = azurerm.front_door
+  provider                       = azurerm.front_door
 }
 
 resource "azurerm_cdn_frontdoor_route" "web" {
-  name                          = "${local.org}-fd-${local.service_name}-web-${var.environment}"
-  cdn_frontdoor_endpoint_id     = data.azurerm_cdn_frontdoor_endpoint.web.id
-  cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.web.id
-  cdn_frontdoor_origin_ids      = [azurerm_cdn_frontdoor_origin.web.id]
-  forwarding_protocol           = "MatchRequest"
-  https_redirect_enabled        = true
-  patterns_to_match             = ["/*"]
-  supported_protocols           = ["Http", "Https"]
+  name                            = "${local.org}-fd-${local.service_name}-web-${var.environment}"
+  cdn_frontdoor_endpoint_id       = data.azurerm_cdn_frontdoor_endpoint.web.id
+  cdn_frontdoor_origin_group_id   = azurerm_cdn_frontdoor_origin_group.web.id
+  cdn_frontdoor_origin_ids        = [azurerm_cdn_frontdoor_origin.web.id]
+  forwarding_protocol             = "MatchRequest"
+  https_redirect_enabled          = true
+  patterns_to_match               = ["/*"]
+  supported_protocols             = ["Http", "Https"]
   cdn_frontdoor_custom_domain_ids = [azurerm_cdn_frontdoor_custom_domain.web.id]
-  link_to_default_domain        = false
-  provider = azurerm.front_door
+  link_to_default_domain          = false
+  provider                        = azurerm.front_door
 }
 
 
