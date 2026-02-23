@@ -70,41 +70,53 @@ resource "azurerm_cdn_frontdoor_custom_domain_association" "web" {
   provider = azurerm.front_door
 }
 
+# WAF policy
 resource "azurerm_cdn_frontdoor_firewall_policy" "web" {
-  name                              = replace("${local.org}-fd-${local.service_name}-waf-${var.environment}", "-", "")
+  name                              = replace("${local.org}-waf-${local.service_name}-web-${var.environment}", "-", "")
   resource_group_name               = var.tooling_config.frontdoor_rg
-  sku_name                          = data.azurerm_cdn_frontdoor_profile.web.sku_name
+  sku_name                          = "Premium_AzureFrontDoor"
   enabled                           = true
   mode                              = "Prevention"
   custom_block_response_status_code = 403
   tags                              = local.tags
 
   custom_rule {
-    name     = "BlockLocalIPs"
-    enabled  = true
-    priority = 1
-    type     = "MatchRule"
-    action   = "Block"
+    name                           = "RateLimitHttpRequest"
+    enabled                        = true
+    priority                       = 100
+    rate_limit_duration_in_minutes = 1
+    rate_limit_threshold           = 300
+    type                           = "RateLimitRule"
+    action                         = "Block"
 
     match_condition {
-      match_variable     = "RemoteAddr"
-      operator           = "IPMatch"
-      negation_condition = false
-      match_values       = ["10.0.1.0/24", "10.0.0.0/24"]
+      match_variable = "RequestMethod"
+      operator       = "Equal"
+      match_values = [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE",
+        "COPY",
+        "MOVE",
+        "HEAD",
+        "OPTIONS"
+      ]
     }
   }
 
   managed_rule {
-    type    = "DefaultRuleSet"
-    version = "1.0"
+    type    = "Microsoft_DefaultRuleSet"
+    version = "2.1"
     action  = "Log"
   }
+
 
   provider = azurerm.front_door
 }
 
 resource "azurerm_cdn_frontdoor_security_policy" "web" {
-  name                     = replace("${local.org}-fd-${local.service_name}-security-policy-${var.environment}", "-", "")
+  name                     = replace("${local.org}-sec-${local.service_name}-web-${var.environment}", "-", "")
   cdn_frontdoor_profile_id = data.azurerm_cdn_frontdoor_profile.web.id
 
   security_policies {
@@ -119,6 +131,6 @@ resource "azurerm_cdn_frontdoor_security_policy" "web" {
       }
     }
   }
+
   provider = azurerm.front_door
 }
-
