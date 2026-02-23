@@ -59,6 +59,12 @@ resource "azurerm_cdn_frontdoor_custom_domain" "web" {
   provider = azurerm.front_door
 }
 
+resource "azurerm_cdn_frontdoor_custom_domain_association" "web" {
+  cdn_frontdoor_custom_domain_id = azurerm_cdn_frontdoor_custom_domain.web.id
+  cdn_frontdoor_route_ids        = [azurerm_cdn_frontdoor_route.web.id]
+  provider                      = azurerm.front_door
+}
+
 
 resource "azurerm_cdn_frontdoor_firewall_policy" "web" {
   name                              = replace("${local.org}-fd-${local.service_name}-waf-${var.environment}", "-", "")
