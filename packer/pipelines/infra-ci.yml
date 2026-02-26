@@ -3,15 +3,9 @@ trigger:
     include:
       - main
       - gh-readonly-queue/*
-    exclude:
-      - app
-      - infrastructure
   paths:
     include:
       - packer
-    exclude:
-      - app
-      - infrastructure
 
 resources:
   pipelines:
