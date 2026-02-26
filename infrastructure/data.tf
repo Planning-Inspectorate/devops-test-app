@@ -28,3 +28,10 @@ data "azurerm_cdn_frontdoor_endpoint" "web" {
   resource_group_name = var.tooling_config.frontdoor_rg
   provider            = azurerm.front_door
 }
+
+data "azurerm_private_dns_zone" "keyvault" {
+  name                = "privatelink.vaultcore.azure.net"
+  resource_group_name = var.tooling_config.network_rg
+
+  provider = azurerm.tooling
+}
