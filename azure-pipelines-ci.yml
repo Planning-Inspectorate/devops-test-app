@@ -24,7 +24,7 @@ resources:
       type: github
       endpoint: Planning-Inspectorate
       name: Planning-Inspectorate/common-pipeline-templates
-      ref: refs/heads/main
+      ref: refs/tags/realease/3.25.1
 
 extends:
   template: stages/wrapper_ci.yml@templates
