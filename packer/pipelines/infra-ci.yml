@@ -6,6 +6,8 @@ trigger:
   paths:
     include:
       - packer
+    exclude:
+      - main
 
 resources:
   pipelines:
