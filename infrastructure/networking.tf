@@ -110,3 +110,5 @@ resource "azurerm_private_dns_zone_virtual_network_link" "keyvault" {
 
   provider = azurerm.tooling
 }
+
+#Create a for loop for network links?
