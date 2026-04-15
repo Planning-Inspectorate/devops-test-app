@@ -27,7 +27,7 @@ module "template_app_web" {
   integration_subnet_id           = azurerm_subnet.apps.id
   endpoint_subnet_id              = azurerm_subnet.main.id
   outbound_vnet_connectivity      = true
-  public_network_access           = true
+  public_network_access           = false
 
   # monitoring
   action_group_ids                  = local.action_group_ids
