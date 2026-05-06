@@ -13,10 +13,10 @@ terraform {
     }
     random = {
       source  = "hashicorp/random"
-      version = "3.8.1"
+      version = "> 3"
     }
   }
-  required_version = ">= 1.11.0, < 1.15.0"
+  required_version = ">= 1.7.3, < 1.16.0"
 }
 
 provider "azurerm" {
