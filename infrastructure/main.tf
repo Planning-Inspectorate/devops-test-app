@@ -33,27 +33,6 @@ resource "azurerm_key_vault" "main" {
   tags = local.tags
 }
 
-resource "azurerm_private_endpoint" "keyvault" {
-  name                = "${local.org}-pe-${local.service_name}-kv-${var.environment}"
-  resource_group_name = azurerm_resource_group.primary.name
-  location            = module.primary_region.location
-  subnet_id           = azurerm_subnet.main.id
-
-  private_dns_zone_group {
-    name                 = "keyvaultprivatednszone"
-    private_dns_zone_ids = [data.azurerm_private_dns_zone.keyvault.id]
-  }
-
-  private_service_connection {
-    name                           = "privateendpointconnection"
-    private_connection_resource_id = azurerm_key_vault.main.id
-    subresource_names              = ["vault"]
-    is_manual_connection           = false
-  }
-
-  tags = local.tags
-}
-
 resource "azurerm_key_vault_access_policy" "admins" {
   key_vault_id = azurerm_key_vault.main.id
   tenant_id    = data.azurerm_client_config.current.tenant_id
@@ -81,10 +60,31 @@ resource "azurerm_key_vault_secret" "manual_secrets" {
     ]
   }
 
-  depends_on = [
-    azurerm_private_endpoint.keyvault,
-    azurerm_private_dns_zone_virtual_network_link.keyvault
-  ]
+  # depends_on = [
+  #   azurerm_private_endpoint.keyvault,
+  #   azurerm_private_dns_zone_virtual_network_link.keyvault
+  # ]
+
+  tags = local.tags
+}
+
+resource "azurerm_private_endpoint" "keyvault" {
+  name                = "${local.org}-pe-${local.service_name}-kv-${var.environment}"
+  resource_group_name = azurerm_resource_group.primary.name
+  location            = module.primary_region.location
+  subnet_id           = azurerm_subnet.main.id
+
+  private_dns_zone_group {
+    name                 = "keyvaultprivatednszone"
+    private_dns_zone_ids = [data.azurerm_private_dns_zone.keyvault.id]
+  }
+
+  private_service_connection {
+    name                           = "privateendpointconnection"
+    private_connection_resource_id = azurerm_key_vault.main.id
+    subresource_names              = ["vault"]
+    is_manual_connection           = false
+  }
 
   tags = local.tags
 }

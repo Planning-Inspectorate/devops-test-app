@@ -9,6 +9,16 @@ trigger:
     exclude:
       - main
 
+pr:
+  branches:
+    include:
+      - '*'
+  paths:
+    include:
+      - packer
+    exclude:
+      - infrastructure
+
 resources:
   pipelines:
     - pipeline: terraform-ci
