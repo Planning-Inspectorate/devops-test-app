@@ -81,7 +81,16 @@ async function copyAssets({ staticDir, govUkRoot }: AssetOptions): Promise<void>
     await copyFolder(fonts, staticFonts);
     await copyFile(js, staticJs);
     await copyFile(manifest, staticManifest);
-    await copyFolder(rebrand, staticRebrand);
+
+    // `rebrand` assets are only present in newer govuk-frontend versions.
+    try {
+        await fs.access(rebrand);
+        await copyFolder(rebrand, staticRebrand);
+    } catch (err: unknown) {
+        if (!(typeof err === 'object' && err !== null && 'code' in err && (err as { code?: string }).code === 'ENOENT')) {
+            throw err;
+        }
+    }
 }
 
 interface AutocompleteOptions {
