@@ -51,7 +51,7 @@ describe('errors', () => {
 			assert.strictEqual(res.status.mock.callCount(), 1);
 			assert.deepStrictEqual(res.status.mock.calls[0].arguments, [404]);
 			const renderArgs = res.render.mock.calls[0].arguments;
-			assert.strictEqual(renderArgs[0], 'views/layouts/error');
+			assert.strictEqual(renderArgs[0], 'layouts/error.njk');
 		});
 	});
 });
