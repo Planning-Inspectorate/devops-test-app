@@ -29,6 +29,7 @@ variable "auth_config" {
     auth_client_id         = string
     allowed_audiences      = string
     allowed_applications   = string
+    allowed_groups         = list(string)
   })
 }
 

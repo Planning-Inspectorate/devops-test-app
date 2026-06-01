@@ -1,6 +1,6 @@
 module "template_app_web" {
   #checkov:skip=CKV_TF_1: Use of commit hash are not required for our Terraform modules
-  source = "github.com/Planning-Inspectorate/infrastructure-modules.git//modules/node-app-service?ref=1.54"
+  source = "github.com/Planning-Inspectorate/infrastructure-modules.git//modules/node-app-service?ref=1e35ec440434b680b26c35488a667b347e939707"
 
   resource_group_name = azurerm_resource_group.primary.name
   location            = module.primary_region.location
@@ -37,6 +37,7 @@ module "template_app_web" {
   health_check_eviction_time_in_min = var.health_check_eviction_time_in_min
 
   #Easy Auth setting
+  # https://learn.microsoft.com/en-gb/azure/app-service/configure-authentication-provider-aad?tabs=workforce-configuration#configure-additional-checks
   auth_config = {
     auth_enabled           = var.auth_config.auth_enabled
     require_authentication = var.auth_config.require_authentication
@@ -46,6 +47,7 @@ module "template_app_web" {
     auth_tenant_endpoint = "https://login.microsoftonline.com/${data.azurerm_client_config.current.tenant_id}/v2.0"
     allowed_applications = var.auth_config.allowed_applications
     allowed_audiences    = var.auth_config.allowed_audiences
+    allowed_groups       = var.auth_config.allowed_groups
   }
 
   app_settings = {
