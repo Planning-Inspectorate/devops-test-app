@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import { loadEnvFile } from 'node:process';
 import path from 'node:path';
 import {fileURLToPath} from 'url';
 
@@ -24,7 +24,9 @@ export function loadConfig(): Config {
         return config;
     }
     // load configuration from .env file into process.env
-    dotenv.config();
+    try {
+        loadEnvFile();
+    } catch {/* ignore errors*/}
 
 // get the file path for the directory this file is in
     const dirname = path.dirname(fileURLToPath(import.meta.url));

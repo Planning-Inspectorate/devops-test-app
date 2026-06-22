@@ -14,7 +14,6 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "*",
-    "dotenv": "*",
     "express": "*",
     "express-validator": "*",
     "govuk-frontend": "*",
