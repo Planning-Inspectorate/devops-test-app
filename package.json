@@ -12,7 +12,7 @@
     "build": "node app/src/util/build.ts",
     "commitlint": "commitlint --from=$(git rev-parse $(git cherry origin/main | head -n 1 | cut -c 3-)^1)",
     "dev": "nodemon --watch app/src --ext js,ts,scss,html,njk --exec \"npm run start\"",
-    "start": "npm run build && node app/src/server.ts",
+    "start": "npm run build && node --max-http-header-size=32768 app/src/server.ts",
     "test": "node --test"
   },
   "license": "MIT",
