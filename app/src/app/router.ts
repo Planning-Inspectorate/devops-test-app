@@ -4,6 +4,7 @@ import { viewHomepage } from "./pages/home/home.controller.ts";
 import { handlePost } from "./pages/post/post.controller.ts";
 import { createMonitoringRoutes } from "../util/monitoring.ts";
 import type {AppService} from "./service.js";
+import {buildTimeoutController} from "./pages/timeout/controller.ts";
 
 /**
  * Main app router
@@ -18,6 +19,8 @@ export function buildRouter(service: AppService): IRouter {
         .get(viewHomepage)
         .post(handlePost);
     router.route('/post').post(handlePost);
+
+	router.get('/timeout', buildTimeoutController(service));
 
 	return router;
 }
