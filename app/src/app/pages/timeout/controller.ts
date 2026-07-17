@@ -11,7 +11,7 @@ export function buildTimeoutController(service: AppService) {
         const id = Math.random().toString(36).substr(2);
         const log = logger.child({id, request: 'timeout'});
 
-        let logInterval;
+        let logInterval: NodeJS.Timeout | null = null;
         let cancelled = false;
 
         req.on('close', () => {
@@ -36,9 +36,24 @@ export function buildTimeoutController(service: AppService) {
         });
 
         log.info('new request');
-        const timeout = req.query.timeoutSeconds || '120';
+        const timeout = (typeof req.query.timeoutSeconds === 'string' && req.query.timeoutSeconds) || '120';
         const timeoutMs = parseInt(timeout) * 1000;
-        log.info({timeout, timeoutMs}, 'query params');
+        const sendHeaders = typeof req.query.sendHeaders === 'string' && req.query.sendHeaders === 'true';
+        const sendHeadersTimeout = (typeof req.query.sendHeadersTimeoutSeconds === 'string' && req.query.sendHeadersTimeoutSeconds) || '1';
+        const sendHeadersTimeoutMs = parseInt(sendHeadersTimeout) * 1000;
+        log.info({timeout, timeoutMs, sendHeaders}, 'query params');
+
+        const body = 'OK';
+
+        if (sendHeaders) {
+            setTimeout(() => {
+                res.writeHead(200, {
+                    'Content-Length': Buffer.byteLength(body),
+                    'Content-Type': 'text/plain',
+                });
+                log.info({timeout, sendHeaders}, 'status & headers sent');
+            }, sendHeadersTimeoutMs);
+        }
 
         // log every 5s so we know its still doing things.
         let elapsed = 0;
@@ -51,7 +66,11 @@ export function buildTimeoutController(service: AppService) {
         if (cancelled) {
             log.info('no response, cancelled');
         } else {
-            res.sendStatus(200);
+            if (sendHeaders) {
+                res.end(body);
+            } else {
+                res.sendStatus(200);
+            }
             log.info('200 response sent');
         }
     }
