@@ -49,6 +49,24 @@ resource "azurerm_key_vault_secret" "agents_admin_password" {
   tags = local.tags
 }
 
+resource "azurerm_key_vault_secret" "dont_remove_with_terraform" {
+  #checkov:skip=CKV_AZURE_41: TODO: Secret rotation
+  name            = "dont-remove-with-terraform"
+  value           = random_password.packer_admin_password.result
+  key_vault_id    = data.azurerm_key_vault.template_key_vault.id
+  expiration_date = "2026-01-01T00:00:00Z"
+  content_type    = "text/plain"
+}
+
+resource "azurerm_key_vault_secret" "dont_remove_with_terraform2" {
+  #checkov:skip=CKV_AZURE_41: TODO: Secret rotation
+  name            = "dont-remove-with-terraform2"
+  value           = random_password.packer_admin_password.result
+  key_vault_id    = data.azurerm_key_vault.template_key_vault.id
+  expiration_date = "2026-01-01T00:00:00Z"
+  content_type    = "text/plain"
+}
+
 resource "azurerm_linux_virtual_machine_scale_set" "azure_devops_agent_pool" {
 
   #checkov:skip=CKV_AZURE_49: SSH key authentication not required
