@@ -17,7 +17,7 @@ export function buildDefaultErrorHandlerMiddleware(logger: Logger): ErrorRequest
 		// make sure we don't use an invalid code
 		const code = error.statusCode && error.statusCode > 399 ? error.statusCode : 500;
 		res.status(code);
-		res.render(`views/layouts/error`, {
+		res.render(`layouts/error`, {
 			pageTitle: 'Sorry, there was an error',
 			messages: [message, 'Try again later']
 		});
@@ -29,7 +29,7 @@ export function buildDefaultErrorHandlerMiddleware(logger: Logger): ErrorRequest
  */
 export function notFoundHandler(req: Request, res: Response) {
 	res.status(404);
-	res.render(`views/layouts/error`, {
+	res.render(`layouts/error`, {
 		pageTitle: 'Page not found',
 		messages: [
 			'If you typed the web address, check it is correct.',
