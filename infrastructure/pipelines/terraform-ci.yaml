@@ -27,8 +27,29 @@ resources:
       name: Planning-Inspectorate/common-pipeline-templates
       ref: refs/tags/release/3.24.2
 
-extends:
-  template: pipelines/terraform_checks.yml@templates
-  parameters:
-    workingDirectory: $(Build.Repository.LocalPath)/infrastructure
-    tflintConfigPath: $(Build.Repository.LocalPath)/infrastructure/.tflint.hcl
+stages:
+  - stage: InitTFLint
+    displayName: "Init TFLint Plugins"
+    jobs:
+      - job: init_tflint
+        displayName: 'Init TFLint'
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - script: |
+              echo "Installing TFLint (if missing) and initializing plugins"
+              if ! command -v tflint >/dev/null 2>&1; then
+                curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+              fi
+              if [ -d "$(Build.Repository.LocalPath)/infrastructure" ]; then
+                cd "$(Build.Repository.LocalPath)/infrastructure"
+                tflint --init --config $(Build.Repository.LocalPath)/infrastructure/.tflint.hcl || true
+              else
+                echo "infrastructure directory not present; skipping tflint --init"
+              fi
+            displayName: 'Init TFLint Plugins'
+
+  - template: pipelines/terraform_checks.yml@templates
+    parameters:
+      workingDirectory: $(Build.Repository.LocalPath)/infrastructure
+      tflintConfigPath: $(Build.Repository.LocalPath)/infrastructure/.tflint.hcl
