@@ -21,4 +21,18 @@ export class AppService {
 	get staticDir() {
 		return this.#config.staticDir;
 	}
+
+	watchTestSecretValue() {
+		const logger = this.logger.child({method: 'watchTestSecretValue'});
+		logger.info('START');
+		let value = this.#config.testSecret?.toString() || '<undefined>';
+		logger.info({value},'initial value');
+		setTimeout(() => {
+			logger.debug('checking secret value');
+			if (value !== this.#config.testSecret) {
+				value = this.#config.testSecret?.toString() || '<undefined>';
+				logger.info({value},'secret value changed');
+			}
+		}, 5 * 1000);
+	}
 }

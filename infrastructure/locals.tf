@@ -23,7 +23,8 @@ locals {
   ])
 
   secrets = [
-    "microsoft-provider-authentication-secret"
+    "microsoft-provider-authentication-secret",
+    "test-secret"
   ]
 
   # tflint-ignore: terraform_unused_declarations

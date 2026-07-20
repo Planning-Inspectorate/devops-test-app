@@ -5,6 +5,8 @@ import { AppService } from './app/service.ts';
 const config = loadConfig();
 const service = new AppService(config);
 
+service.watchTestSecretValue();
+
 const app = createApp(service);
 
 // Trust proxy, because our application is behind Front Door

@@ -11,6 +11,7 @@ export interface Config {
     sessionSecret: string;
     staticDir: string;
     NODE_ENV?: string;
+    testSecret?: string;
 }
 
 // cache the config
@@ -40,7 +41,8 @@ export function loadConfig(): Config {
         GIT_SHA,
         LOG_LEVEL,
         HTTP_PORT,
-        NODE_ENV
+        NODE_ENV,
+        TEST_SECRET
     } = process.env;
 
     config = {
@@ -56,7 +58,8 @@ export function loadConfig(): Config {
         sessionSecret: 'shhh, secret!',
         // the static directory to serve assets from (images, css, etc..)
         staticDir,
-        NODE_ENV: NODE_ENV
+        NODE_ENV: NODE_ENV,
+        testSecret: TEST_SECRET
     };
     return config;
 }

@@ -61,6 +61,8 @@ module "template_app_web" {
     #Auth
     MICROSOFT_PROVIDER_AUTHENTICATION_SECRET = local.key_vault_refs["microsoft-provider-authentication-secret"]
     WEBSITE_AUTH_AAD_ALLOWED_TENANTS         = data.azurerm_client_config.current.tenant_id
+
+    TEST_SECRET = local.key_vault_refs["test-secret"]
   }
 
   providers = {
