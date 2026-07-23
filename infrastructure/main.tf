@@ -77,7 +77,8 @@ resource "azurerm_key_vault_secret" "manual_secrets" {
 
   lifecycle {
     ignore_changes = [
-      value
+      value,
+      expiration_date,
     ]
   }
 
@@ -87,4 +88,39 @@ resource "azurerm_key_vault_secret" "manual_secrets" {
   ]
 
   tags = local.tags
+}
+
+# Testing Terraform with secret expiries so Terraform does not change secret expiration metadata after creation.
+resource "azurerm_key_vault_secret" "secret_ignore_only_value" {
+  #checkov:skip=CKV_AZURE_41: test secret - expiry intentionally omitted for testing
+  name         = "secret-ignore-only-value"
+  value        = "<terraform_placeholder>"
+  content_type = "plaintext"
+  key_vault_id = azurerm_key_vault.main.id
+
+  lifecycle {
+    ignore_changes = [
+      value,
+      expiration_date,
+    ]
+  }
+
+  tags = merge(local.tags, { scenario = "experiment", scenario2 = "can-be-deleted" })
+}
+
+# Testing using a module.
+module "manual_secret_test_new" {
+  #checkov:skip=CKV_AZURE_41: test secret - expiry intentionally omitted for testing
+  source       = "./modules/manual_secret"
+  name         = "module-created-secret"
+  key_vault_id = azurerm_key_vault.main.id
+  value        = "<terraform_placeholder>"
+  content_type = "plaintext"
+  tags         = merge(local.tags, { scenario = "module-tag-test", scenario2 = "can-be-deleted" })
+
+  # keep TF from changing the secret payload or expiry after creation
+  ignore_value  = true
+  ignore_expiry = true
+
+  prevent_destroy = false
 }
