@@ -123,7 +123,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "storage" {
 
 resource "azurerm_private_endpoint" "state_file" {
   name                = "${local.org}-pe-${local.service_name}-st-${var.environment}"
-  resource_group_name = "pins-rg-shared-terraform-uks"
+  resource_group_name = var.tooling_config.network_rg
   location            = module.primary_region.location
   subnet_id           = azurerm_subnet.main.id
 
