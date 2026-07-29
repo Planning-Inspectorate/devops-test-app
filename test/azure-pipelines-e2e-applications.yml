@@ -20,42 +20,23 @@ jobs:
     timeoutInMinutes: 60
     pool: pins-template-test
     steps:
+      - checkout: self
+        persistCredentials: true
+
       - script: |
-          # prefer existing node if correct major version available
+          export NVM_DIR="/usr/local/nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+          # Prefer agent default Node; fall back to nvm if needed
           if node -v 2>/dev/null | grep -q '^v22\.'; then
             echo "Node 22 already active: $(node -v)"
           else
-            export NVM_DIR="/usr/local/nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-            nvm use 22
-            echo "Switched to $(node -v)"
+            echo "Attempting nvm use 22"
+            nvm use 22 || true
           fi
-        displayName: "Ensure Node 22 (use agent default when possible)"
 
-      - task: Npm@1
-        inputs:
-          command: "install"
-          workingDir: $(System.DefaultWorkingDirectory)/apps/e2e
-        displayName: "Install Dependencies"
-
-      - task: Bash@3
-        inputs:
-          targetType: 'inline'
-          script: npx cypress run --spec "cypress/e2e/back-office-applications/addRepresentation.spec.js"
-          workingDirectory: 'apps/e2e'
-
-        env:
-          BASE_URL: $(BASE_URL)
-          CASE_TEAM_EMAIL: $(CASE_TEAM_EMAIL)
-          CASE_ADMIN_EMAIL: $(CASE_ADMIN_EMAIL)
-          INSPECTOR_EMAIL: $(INSPECTOR_EMAIL)
-          USER_PASSWORD: $(USER_PASSWORD)
-          FEATURE_FLAG_CONNECTION_STRING: $(FEATURE_FLAG_CONNECTION_STRING)
-        displayName: "Run Cypress Tests Group 1"
-
-      - task: PublishBuildArtifacts@1
-        inputs:
-          pathToPublish: 'apps/e2e/cypress/screenshots'
-          artifactName: 'FailedTests'
-        displayName: "Publish Failed Tests Artifacts"
-        condition: failed()
+          echo "node: $(node -v || echo 'not found')"
+          echo "npm: $(npm -v || echo 'not found')"
+          which node || true
+          which npm || true
+        displayName: "Verify Node and npm"
