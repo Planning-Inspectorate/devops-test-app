@@ -1,10 +1,10 @@
-parameters:
-  - name: Environment
-    type: string
-    default: 'test'
-    values:
-      - 'dev'
-      - 'test'
+# parameters:
+#   - name: Environment
+#     type: string
+#     default: 'test'
+#     values:
+#       - 'dev'
+#       - 'test'
 
 # variables:
 #   - name: APP
