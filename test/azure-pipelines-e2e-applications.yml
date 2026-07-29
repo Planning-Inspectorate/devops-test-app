@@ -20,10 +20,17 @@ jobs:
     timeoutInMinutes: 60
     pool: pins-odt-agent-pool-tests
     steps:
-      - task: UseNode@1
-        displayName: "Set Node Version"
-        inputs:
-          version: '20.x'
+      - script: |
+          # prefer existing node if correct major version available
+          if node -v 2>/dev/null | grep -q '^v22\.'; then
+            echo "Node 22 already active: $(node -v)"
+          else
+            export NVM_DIR="/usr/local/nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+            nvm use 22
+            echo "Switched to $(node -v)"
+          fi
+        displayName: "Ensure Node 22 (use agent default when possible)"
 
       - task: Npm@1
         inputs:
