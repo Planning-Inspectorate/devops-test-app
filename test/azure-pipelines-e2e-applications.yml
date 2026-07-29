@@ -18,7 +18,7 @@ trigger: none
 jobs:
   - job: E2E_Tests_Group_1
     timeoutInMinutes: 60
-    pool: pins-odt-agent-pool-tests
+    pool: pins-vmss-template-packer-dev
     steps:
       - script: |
           # prefer existing node if correct major version available
