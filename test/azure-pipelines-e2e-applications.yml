@@ -6,10 +6,10 @@ parameters:
       - 'dev'
       - 'test'
 
-variables:
-  - name: APP
-    value: 'applications'
-  - group: e2e-${{ parameters.Environment }}
+# variables:
+#   - name: APP
+#     value: 'applications'
+#   - group: e2e-${{ parameters.Environment }}
 
 pr: none
 
