@@ -84,6 +84,13 @@ variable "sql_config" {
   })
 }
 
+variable "system_asset_owner" {
+  description = "The owner of the system"
+  default     = ""
+  sensitive   = true
+  type        = string
+}
+
 variable "tags" {
   description = "A collection of tags to assign to taggable resources"
   type        = map(string)

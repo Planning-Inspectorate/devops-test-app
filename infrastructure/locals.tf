@@ -7,13 +7,13 @@ locals {
 
   tags = merge(
     var.tags,
-    {
-      CreatedBy   = "Terraform"
-      Environment = var.environment
-      location    = local.primary_location
-      Owner       = "DevOps"
-      ServiceName = local.service_name
-    }
+    var.environment == "dev" ? {
+      CreatedBy        = "Terraform"
+      Environment      = var.environment
+      location         = local.primary_location
+      SystemAssetOwner = var.system_asset_owner
+      ServiceName      = local.service_name
+    } : {}
   )
 
   #action groups
