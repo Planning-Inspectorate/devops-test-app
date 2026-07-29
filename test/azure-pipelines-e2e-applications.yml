@@ -23,7 +23,7 @@ jobs:
       - checkout: self
         persistCredentials: true
 
-      - script: |
+      - script: | # Remove this after running to test
           export NVM_DIR="/usr/local/nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
@@ -35,8 +35,37 @@ jobs:
             nvm use 22 || true
           fi
 
+          # expose chosen node on PATH for later tasks
+          NODE_PATH=$(dirname $(nvm which 22) 2>/dev/null || true)
+          if [ -n "$NODE_PATH" ]; then
+            echo "##vso[task.setvariable variable=PATH]$NODE_PATH:$PATH"
+          fi
+
           echo "node: $(node -v || echo 'not found')"
           echo "npm: $(npm -v || echo 'not found')"
           which node || true
           which npm || true
         displayName: "Verify Node and npm"
+
+      - task: ShellScript@2
+        inputs:
+          scriptPath: 'appeals/e2e/install-chromium.sh'
+        displayName: 'Install Chromium'
+        condition: eq(variables['agent.os'], 'Linux')
+
+      - task: Cache@2
+        displayName: Cache npm
+        inputs:
+          key: "npm | '$(Agent.OS)' | package-lock.json"
+          path: $(Pipeline.Workspace)/.npm
+
+      - task: Npm@1
+        inputs:
+          command: "ci"
+          workingDir: '$(Build.SourcesDirectory)/appeals/e2e'
+        displayName: "Clean install Appeals E2E Dependencies"
+
+      - script: |
+          cd '$(Build.SourcesDirectory)/appeals/e2e'
+          npx cypress verify || true
+        displayName: 'Verify Cypress Installation'
