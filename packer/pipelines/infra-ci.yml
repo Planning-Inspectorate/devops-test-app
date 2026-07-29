@@ -6,13 +6,12 @@ trigger:
   paths:
     include:
       - packer
-    exclude:
-      - main
 
 resources:
   pipelines:
     - pipeline: terraform-ci
       source: Infrastructure PR
+      trigger: none
 
   repositories:
     - repository: templates
