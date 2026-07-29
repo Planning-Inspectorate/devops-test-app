@@ -53,6 +53,11 @@ jobs:
         displayName: 'Install Chromium'
         condition: eq(variables['agent.os'], 'Linux')
 
+      - script: |
+          mkdir -p "$(Pipeline.Workspace)/.npm"
+          echo "Created npm cache directory: $(Pipeline.Workspace)/.npm"
+        displayName: 'Prepare npm cache directory'
+
       - task: Cache@2
         displayName: Cache npm
         inputs:
