@@ -49,7 +49,7 @@ jobs:
 
       - task: ShellScript@2
         inputs:
-          scriptPath: 'appeals/e2e/install-chromium.sh'
+          scriptPath: '/install-chromium.sh'
         displayName: 'Install Chromium'
         condition: eq(variables['agent.os'], 'Linux')
 
