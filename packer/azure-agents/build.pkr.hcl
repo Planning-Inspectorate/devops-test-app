@@ -1,4 +1,4 @@
-packer {
+  packer {
   required_plugins {
     azure = {
       source  = "github.com/hashicorp/azure"
@@ -12,7 +12,7 @@ source "azure-arm" "azure-agents" {
     Project          = "template"
     CreatedBy        = "packer"
     NodeVersion      = "22.14.0"
-    TerraformVersion = "1.11.4"
+    TerraformVersion = "1.16.0"
   }
 
   client_id       = var.client_id

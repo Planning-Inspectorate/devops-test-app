@@ -1,0 +1,70 @@
+# parameters:
+#   - name: Environment
+#     type: string
+#     default: 'test'
+#     values:
+#       - 'dev'
+#       - 'test'
+
+# variables:
+#   - name: APP
+#     value: 'applications'
+#   - group: e2e-${{ parameters.Environment }}
+
+pr: none
+
+trigger: none
+
+jobs:
+  - job: E2E_Tests_Group_1
+    timeoutInMinutes: 60
+    pool: pins-template-test
+    steps:
+      - checkout: self
+        persistCredentials: true
+
+      # - script: | # Remove this after running to test
+      #     export NVM_DIR="/usr/local/nvm"
+      #     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+      #     # Prefer agent default Node; fall back to nvm if needed
+      #     if node -v 2>/dev/null | grep -q '^v22\.'; then
+      #       echo "Node 22 already active: $(node -v)"
+      #     else
+      #       echo "Attempting nvm use 22"
+      #       nvm use 22 || true
+      #     fi
+
+      #     # expose chosen node on PATH for later tasks
+      #     NODE_PATH=$(dirname $(nvm which 22) 2>/dev/null || true)
+      #     if [ -n "$NODE_PATH" ]; then
+      #       echo "##vso[task.setvariable variable=PATH]$NODE_PATH:$PATH"
+      #     fi
+
+      #     echo "node: $(node -v || echo 'not found')"
+      #     echo "npm: $(npm -v || echo 'not found')"
+      #     which node || true
+      #     which npm || true
+      #   displayName: "Verify Node and npm"
+
+      - task: ShellScript@2
+        inputs:
+          scriptPath: 'test/install-chromium.sh'
+        displayName: 'Install Chromium'
+        condition: eq(variables['agent.os'], 'Linux')
+
+      - script: |
+          mkdir -p "$(Pipeline.Workspace)/.npm"
+          echo "Created npm cache directory: $(Pipeline.Workspace)/.npm"
+        displayName: 'Prepare npm cache directory'
+
+      - task: Cache@2
+        displayName: Cache npm
+        inputs:
+          key: "npm | $(Agent.OS) | package-lock.json"
+          path: $(Pipeline.Workspace)/.npm
+
+      - script: |
+          cd '$(Build.SourcesDirectory)/appeals/e2e'
+          npx cypress verify || true
+        displayName: 'Verify Cypress Installation'
