@@ -59,12 +59,6 @@ jobs:
           key: "npm | $(Agent.OS) | package-lock.json"
           path: $(Pipeline.Workspace)/.npm
 
-      - task: Npm@1
-        inputs:
-          command: "ci"
-          workingDir: '$(Build.SourcesDirectory)/appeals/e2e'
-        displayName: "Clean install Appeals E2E Dependencies"
-
       - script: |
           cd '$(Build.SourcesDirectory)/appeals/e2e'
           npx cypress verify || true
