@@ -11,8 +11,8 @@ source "azure-arm" "azure-agents" {
   azure_tags = {
     Project          = "template"
     CreatedBy        = "packer"
-    NodeVersion      = "22.14.0"
-    TerraformVersion = "1.11.4"
+    NodeVersion      = "22.14.0" # change me
+    TerraformVersion = "1.15.8" # change me
   }
 
   client_id       = var.client_id
@@ -41,6 +41,12 @@ build {
     execute_command = "chmod +x {{ .Path }}; {{ .Vars }} sudo -E bash -e '{{ .Path }}'"
     script          = "${path.cwd}/tools.sh"
   }
+
+  provisioner "file" {
+    source = "${path.cwd}/../../../tests/requirements.txt"
+    destination = "tests_requirements.txt"
+  }
+
 }
 
 variable "client_id" {

@@ -13,9 +13,10 @@ pr:
       - '*'
   paths:
     include:
-      - packer
+      - packer/**
     exclude:
       - main
+      - infrastructure/**
 
 resources:
   repositories:
