@@ -11,7 +11,6 @@ locals {
       CreatedBy        = "Terraform"
       Environment      = var.environment
       location         = local.primary_location
-      Owner            = "DevOps"
       ServiceName      = local.service_name
       SystemAssetOwner = var.system_asset_owner,
     }
