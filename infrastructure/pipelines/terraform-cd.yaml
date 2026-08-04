@@ -33,3 +33,6 @@ extends:
     containerPrefix: terraform-state-devops-template-
     workingDirectory: $(Build.Repository.LocalPath)/infrastructure
     environmentVarFilePath: $(Build.Repository.LocalPath)/infrastructure/environments
+    planStageExtraEnvironmentVariables:
+      - name: TF_VAR_system_asset_owner
+        value: $(system_asset_owner)
