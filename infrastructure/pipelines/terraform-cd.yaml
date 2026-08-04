@@ -17,7 +17,7 @@ resources:
       type: github
       endpoint: Planning-Inspectorate
       name: Planning-Inspectorate/common-pipeline-templates
-      ref: refs/tags/release/3.24.2
+      ref: refs/tags/release/3.29.0
 
 extends:
   template: pipelines/terraform_plan_apply.yml@templates
@@ -33,8 +33,6 @@ extends:
     containerPrefix: terraform-state-devops-template-
     workingDirectory: $(Build.Repository.LocalPath)/infrastructure
     environmentVarFilePath: $(Build.Repository.LocalPath)/infrastructure/environments
-    extraVariables:
-      - group: extra_variables
-    extraEnvironmentVariables:
+    planStageExtraEnvironmentVariables:
       - name: TF_VAR_system_asset_owner
         value: $(system_asset_owner)
