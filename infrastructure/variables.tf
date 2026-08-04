@@ -84,6 +84,13 @@ variable "sql_config" {
   })
 }
 
+variable "system_asset_owner" {
+  description = "tagging - value extracted from ADO library secret"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
 variable "tags" {
   description = "A collection of tags to assign to taggable resources"
   type        = map(string)
