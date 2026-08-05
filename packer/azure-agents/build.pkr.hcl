@@ -12,7 +12,7 @@ source "azure-arm" "azure-agents" {
     Project          = "template"
     CreatedBy        = "packer"
     NodeVersion      = "22.14.0"
-    TerraformVersion = "1.11.4"
+    TerraformVersion = "1.15.8"
   }
 
   client_id       = var.client_id
@@ -40,6 +40,11 @@ build {
   provisioner "shell" {
     execute_command = "chmod +x {{ .Path }}; {{ .Vars }} sudo -E bash -e '{{ .Path }}'"
     script          = "${path.cwd}/tools.sh"
+  }
+
+  provisioner "file" {
+    source = "${path.cwd}/../../tests/requirements.txt"
+    destination = "tests_requirements.txt"
   }
 }
 

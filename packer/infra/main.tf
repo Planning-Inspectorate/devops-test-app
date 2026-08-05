@@ -1,12 +1,3 @@
-module "primary_region" {
-  #checkov:skip=CKV_AZURE_1: Trusted Source
-  #checkov:skip=CKV_TF_1: Trusted module source
-  source  = "claranet/regions/azurerm"
-  version = "7.3.1"
-
-  azure_region = local.primary_location
-}
-
 locals {
   org              = "pins"
   service_name     = "template-packer"
@@ -75,21 +66,14 @@ resource "azurerm_linux_virtual_machine_scale_set" "azure_devops_agent_pool" {
 
   source_image_id = data.azurerm_image.packer_images.id
 
-  # source_image_reference {
-  #   publisher = "Canonical"
-  #   offer     = "0001-com-ubuntu-server-jammy"
-  #   sku       = "22_04-lts"
-  #   version   = "latest"
-  # }
-
   boot_diagnostics {
     storage_account_uri = null
   }
 
   network_interface {
-    enable_accelerated_networking = true
-    name                          = each.value["nic_name"]
-    primary                       = true
+    accelerated_networking_enabled = true
+    name                           = each.value["nic_name"]
+    primary                        = true
 
     ip_configuration {
       name      = "default"

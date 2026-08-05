@@ -5,7 +5,9 @@ trigger:
       - gh-readonly-queue/*
   paths:
     include:
-      - packer
+      - packer/**
+    exclude:
+      - infrastructure/**
 
 resources:
   pipelines:

@@ -72,10 +72,7 @@ sudo snap install powershell --classic
 # Terraform
 curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
 sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-sudo apt-get install -y terraform=1.13.3-1
-
-# Terragrunt 0.55.1
-sudo curl -s -L "https://github.com/gruntwork-io/terragrunt/releases/download/v0.55.1/terragrunt_linux_amd64" -o /usr/bin/terragrunt && chmod 777 /usr/bin/terragrunt
+sudo apt-get install -y terraform=1.15.8-1
 
 # Checkov
 python3 -m pip install --force-reinstall packaging==21
@@ -100,11 +97,23 @@ nvm install 20
 nvm alias default 22
 nvm use default
 
+# Python
+# Python(Ubuntu 22 uses 3.10 by default)
+sudo apt-get install -y --no-install-recommends \
+  python3 \
+  python3-distutils \
+  python3-pip
+
+# Python dependencies
+## Requirements for the tests
+sudo python3 -m pip install -r tests_requirements.txt
+
+##### These changes were testing for when we were removing the install step for node on e2e pipelines?
 # Now safe to set PATH to default Node bin
 DEFAULT_NODE=$(nvm version default)
 export PATH="$NVM_DIR/versions/node/$DEFAULT_NODE/bin:$PATH"
 
-# Persist for all users
+# Persist for all users 
 sudo tee /etc/profile.d/nvm.sh > /dev/null <<"EOT"
 export NVM_DIR="/usr/local/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
